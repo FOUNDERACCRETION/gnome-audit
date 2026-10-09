@@ -1,0 +1,26 @@
+{
+  "rows": 139541,
+  "global_flip_mp": 0.130413283551071,
+  "global_flip_oqmd": 0.15925068617825586,
+  "spreads": {
+    "3": {
+      "spread_pp": 23.90421651823415,
+      "disjoint_ci": true,
+      "top": "chalcogenide/Ln=False/3d=True",
+      "top_rate": 0.30319148936170215,
+      "bot": "intermetallic/Ln=True/3d=False",
+      "bot_rate": 0.06414932417936066,
+      "n_cells": 17
+    },
+    "4": {
+      "spread_pp": 26.669895076674738,
+      "disjoint_ci": true,
+      "top": "oxide/Ln=False/3d=True",
+      "top_rate": 0.30669895076674736,
+      "bot": "intermetallic/Ln=False/3d=False",
+      "bot_rate": 0.04,
+      "n_cells": 23
+    }
+  },
+  "verdict": "GO"
+}

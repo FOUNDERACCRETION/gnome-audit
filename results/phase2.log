@@ -1,0 +1,109 @@
+loading data/stable_materials_r2scan.csv
+rows=139541  global flip MP=13.04%  OQMD=15.93%
+
+=== PRIMARY: disjoint cells (n>=500) ===
+ n_elements             anion_class  has_Ln  has_3d     n  flip_mp     lo     hi  flip_oqmd  lo_oqmd  hi_oqmd
+          3            chalcogenide   False    True   564   0.3032 0.2642 0.3405     0.3245   0.2872   0.3635
+          3 boride/carbide/silicide   False    True   575   0.2957 0.2591 0.3322     0.3096   0.2730   0.3496
+          3                pnictide   False    True   813   0.2399 0.2091 0.2669     0.2645   0.2337   0.2965
+          3                   oxide   False   False   921   0.2172 0.1900 0.2432     0.2345   0.2074   0.2617
+          3           intermetallic   False    True  2667   0.2115 0.1961 0.2272     0.2340   0.2167   0.2501
+          3           intermetallic    True    True  2056   0.1902 0.1741 0.2077     0.2354   0.2169   0.2529
+          3                  halide   False   False  1326   0.1735 0.1531 0.1938     0.2051   0.1833   0.2270
+          3                pnictide    True   False  1349   0.1683 0.1490 0.1875     0.1824   0.1623   0.2024
+          3                   oxide    True   False   730   0.1219 0.0973 0.1466     0.1411   0.1164   0.1658
+          3 boride/carbide/silicide   False   False   845   0.1172 0.0970 0.1396     0.1385   0.1136   0.1621
+          3                pnictide   False   False  1473   0.1107 0.0950 0.1263     0.1249   0.1073   0.1419
+          3                  halide    True   False   982   0.1059 0.0876 0.1253     0.1507   0.1293   0.1762
+          3            chalcogenide   False   False  1106   0.1058 0.0877 0.1248     0.1166   0.0994   0.1356
+          3            chalcogenide    True   False  1076   0.1013 0.0836 0.1199     0.1264   0.1069   0.1468
+          3 boride/carbide/silicide    True   False  1246   0.0963 0.0811 0.1124     0.1172   0.0995   0.1356
+          3           intermetallic   False   False  2618   0.0791 0.0688 0.0886     0.0993   0.0871   0.1104
+          3           intermetallic    True   False  4661   0.0641 0.0575 0.0710     0.0955   0.0865   0.1041
+          4                   oxide   False    True  2478   0.3067 0.2897 0.3257     0.3253   0.3075   0.3418
+          4                pnictide    True    True  4573   0.3011 0.2871 0.3140     0.3346   0.3201   0.3492
+          4 boride/carbide/silicide   False    True  4501   0.2522 0.2402 0.2648     0.2853   0.2726   0.2982
+          4 boride/carbide/silicide    True    True  4561   0.2285 0.2164 0.2401     0.2795   0.2662   0.2920
+          4                  halide   False    True   794   0.2242 0.1940 0.2531     0.2582   0.2292   0.2897
+          4                   oxide   False   False  3318   0.1893 0.1763 0.2028     0.2119   0.1983   0.2257
+          4                   oxide    True    True  1399   0.1808 0.1608 0.2023     0.2094   0.1880   0.2287
+          4                pnictide   False    True  5736   0.1776 0.1684 0.1874     0.2150   0.2048   0.2258
+          4            chalcogenide   False    True  1487   0.1634 0.1439 0.1822     0.1896   0.1695   0.2098
+          4                pnictide    True   False  7412   0.1388 0.1311 0.1471     0.1596   0.1507   0.1678
+          4                   oxide    True   False  4232   0.1385 0.1281 0.1496     0.1652   0.1538   0.1756
+          4                  halide   False   False  1404   0.1311 0.1132 0.1481     0.1517   0.1332   0.1695
+          4           intermetallic    True    True 10659   0.1295 0.1234 0.1357     0.1720   0.1643   0.1793
+          4           intermetallic   False    True  7459   0.1207 0.1132 0.1278     0.1538   0.1456   0.1620
+          4                  halide    True    True  1119   0.0912 0.0751 0.1090     0.1349   0.1162   0.1555
+          4 boride/carbide/silicide    True   False 10287   0.0905 0.0849 0.0959     0.1174   0.1113   0.1239
+          4            chalcogenide    True   False  1497   0.0835 0.0701 0.0982     0.1142   0.0988   0.1309
+          4 boride/carbide/silicide   False   False  3422   0.0821 0.0728 0.0912     0.1032   0.0932   0.1137
+          4            chalcogenide   False   False  1467   0.0702 0.0579 0.0839     0.0893   0.0750   0.1043
+          4                pnictide   False   False  4675   0.0599 0.0533 0.0665     0.0757   0.0680   0.0828
+          4                  halide    True   False  3599   0.0592 0.0520 0.0667     0.0761   0.0675   0.0847
+          4           intermetallic    True   False 18932   0.0547 0.0517 0.0580     0.0864   0.0825   0.0902
+          4           intermetallic   False   False  5025   0.0400 0.0348 0.0454     0.0625   0.0557   0.0689
+
+=== SECONDARY: lanthanide effect, matched cells ===
+ n_elements             anion_class  has_3d  n_Ln  rate_Ln  lo_Ln  hi_Ln  n_noLn  rate_noLn  lo_noLn  hi_noLn  delta_pp  disjoint
+          3 boride/carbide/silicide   False  1246   0.0963 0.0795 0.1132     845     0.1172   0.0959   0.1396   -2.0852     False
+          3            chalcogenide   False  1076   0.1013 0.0836 0.1208    1106     0.1058   0.0877   0.1257   -0.4486     False
+          3                  halide   False   982   0.1059 0.0866 0.1263    1326     0.1735   0.1531   0.1938   -6.7548      True
+          3           intermetallic   False  4661   0.0641 0.0575 0.0712    2618     0.0791   0.0691   0.0894   -1.4919     False
+          3           intermetallic    True  2056   0.1902 0.1732 0.2072    2667     0.2115   0.1954   0.2276   -2.1298     False
+          3                   oxide   False   730   0.1219 0.0986 0.1452     921     0.2172   0.1911   0.2454   -9.5237      True
+          3                pnictide   False  1349   0.1683 0.1497 0.1890    1473     0.1107   0.0950   0.1276    5.7614      True
+          4 boride/carbide/silicide   False 10287   0.0905 0.0851 0.0958    3422     0.0821   0.0731   0.0915    0.8387     False
+          4 boride/carbide/silicide    True  4561   0.2285 0.2164 0.2407    4501     0.2522   0.2399   0.2648   -2.3708     False
+          4            chalcogenide   False  1497   0.0835 0.0701 0.0989    1467     0.0702   0.0573   0.0832    1.3289     False
+          4                  halide   False  3599   0.0592 0.0514 0.0672    1404     0.1311   0.1140   0.1481   -7.1871      True
+          4                  halide    True  1119   0.0912 0.0751 0.1072     794     0.2242   0.1965   0.2569  -13.3029      True
+          4           intermetallic   False 18932   0.0547 0.0516 0.0584    5025     0.0400   0.0344   0.0458    1.4722      True
+          4           intermetallic    True 10659   0.1295 0.1232 0.1350    7459     0.1207   0.1136   0.1282    0.8808     False
+          4                   oxide   False  4232   0.1385 0.1283 0.1489    3318     0.1893   0.1772   0.2019   -5.0802      True
+          4                   oxide    True  1399   0.1808 0.1608 0.2001    2478     0.3067   0.2897   0.3265  -12.5855      True
+          4                pnictide   False  7412   0.1388 0.1313 0.1468    4675     0.0599   0.0535   0.0665    7.8936      True
+          4                pnictide    True  4573   0.3011 0.2878 0.3134    5736     0.1776   0.1681   0.1883   12.3465      True
+
+=== ROBUSTNESS: flip rate vs threshold ===
+ threshold_eV  overall  boride/carbide/silicide  chalcogenide  halide  hydride  intermetallic  oxide  pnictide
+       0.0000   0.1304                   0.1500        0.1210  0.1151   0.1204         0.0922 0.1928    0.1668
+       0.0050   0.0928                   0.1130        0.0799  0.0816   0.0859         0.0545 0.1550    0.1283
+       0.0100   0.0715                   0.0863        0.0596  0.0640   0.0602         0.0389 0.1253    0.1033
+       0.0150   0.0556                   0.0651        0.0461  0.0476   0.0498         0.0293 0.1026    0.0826
+       0.0200   0.0445                   0.0522        0.0377  0.0356   0.0432         0.0228 0.0859    0.0657
+       0.0250   0.0360                   0.0425        0.0299  0.0279   0.0328         0.0181 0.0728    0.0524
+       0.0300   0.0297                   0.0351        0.0256  0.0221   0.0252         0.0148 0.0611    0.0435
+       0.0350   0.0248                   0.0298        0.0220  0.0179   0.0224         0.0123 0.0503    0.0362
+       0.0400   0.0211                   0.0262        0.0196  0.0153   0.0170         0.0104 0.0422    0.0303
+       0.0450   0.0182                   0.0227        0.0172  0.0133   0.0131         0.0090 0.0367    0.0254
+       0.0500   0.0159                   0.0206        0.0161  0.0116   0.0109         0.0077 0.0320    0.0216
+
+=== ROBUSTNESS: confound splits ===
+             flag  value      n  flip_mp     lo     hi
+newpot_LiNaMgGeGa   True  27475   0.1100 0.1063 0.1137
+newpot_LiNaMgGeGa  False 112066   0.1354 0.1333 0.1374
+   plusU_elements   True  39379   0.2402 0.2361 0.2445
+   plusU_elements  False 100162   0.0873 0.0855 0.0890
+
+=== VERDICT: GO ===
+{
+  "3": {
+    "spread_pp": 23.90421651823415,
+    "disjoint_ci": true,
+    "top": "chalcogenide/Ln=False/3d=True",
+    "top_rate": 0.30319148936170215,
+    "bot": "intermetallic/Ln=True/3d=False",
+    "bot_rate": 0.06414932417936066,
+    "n_cells": 17
+  },
+  "4": {
+    "spread_pp": 26.669895076674738,
+    "disjoint_ci": true,
+    "top": "oxide/Ln=False/3d=True",
+    "top_rate": 0.30669895076674736,
+    "bot": "intermetallic/Ln=False/3d=False",
+    "bot_rate": 0.04,
+    "n_cells": 23
+  }
+}
