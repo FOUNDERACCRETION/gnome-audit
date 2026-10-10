@@ -5,8 +5,8 @@ import ast, json, sys
 import numpy as np, pandas as pd
 
 RNG = np.random.default_rng(20261009)
-DATA = sys.argv[1]
-OUT = sys.argv[2]
+DATA = sys.argv[1] if len(sys.argv)>1 else "data/stable_materials_r2scan.csv"
+OUT = sys.argv[2] if len(sys.argv)>2 else "results"
 
 LN = set("La Ce Pr Nd Pm Sm Eu Gd Tb Dy Ho Er Tm Yb Lu".split())
 AN = set("Ac Th Pa U Np Pu".split())

@@ -24,6 +24,8 @@ DECISION.md           dated decision records written as each phase completed
 scripts/              one script per analysis phase; see table below
 results/              every CSV/PNG the paper draws a number or figure from
 run_all.py            regenerates results/ end to end and checks headline numbers
+paper/                LaTeX source and PDF of the current draft
+.github/workflows/    continuous reproduction on a fresh runner (see below)
 review/               adversarial referee report generated during drafting (round 3); the paper's
                       Sections 4.3-4.5 and 4.14 are the response to it
 requirements.txt      pinned versions
@@ -57,6 +59,14 @@ All random draws use `numpy.random.default_rng(20261009)`.
    returns zero rows with no error.
 2. `stable_materials_r2scan.csv` has `MaterialId` as its first column; reading it with
    `index_col=0` and `usecols` together silently drops it.
+
+## Continuous reproduction
+
+`.github/workflows/reproduce.yml` runs on every push to `master` and on demand: a fresh
+Linux runner clones the repository, downloads the two GNoME CSVs from DeepMind's bucket,
+regenerates `results/` from scratch (all phases except the two Materials Project pulls)
+and runs `run_all.py --check`. The Actions tab holds the log; a green run means every
+number in the abstract was regenerated on hardware the author does not own.
 
 ## Citing
 
