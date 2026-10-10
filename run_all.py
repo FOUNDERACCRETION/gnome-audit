@@ -91,6 +91,9 @@ def known_aggregate():
 CHECKS_MP = [
     ("known-materials aggregate flip, cells with n>=100 (%)", known_aggregate, 14.88, 0.3),
 ]
+# Set when the Materials Project phases did not run in this invocation, so that any check
+# reading their output is reported as read from the stored file rather than regenerated.
+MP_STORED = False
 
 def run(name):
     log = ROOT / "results" / f"{name}.log"
@@ -105,7 +108,9 @@ def run(name):
 def check(mp=True):
     print("\nHeadline numbers vs paper:")
     bad = 0
-    for label, fn, paper, tol in CHECKS + (CHECKS_MP if mp else []):
+    for label, fn, paper, tol in CHECKS + ([(l + "  [stored, not regenerated here]"
+                                             if MP_STORED else l, f, p_, t_)
+                                            for l, f, p_, t_ in CHECKS_MP] if mp else []):
         try:
             v = fn(); ok = abs(v - paper) <= tol
         except Exception as e:
@@ -135,7 +140,9 @@ if __name__ == "__main__":
             if name in skip:
                 print(f"  {name:22s}          skipped (--skip)"); continue
             if name in NEEDS_MP and not have_key:
-                print(f"  {name:22s}          skipped (no MP_API_KEY)"); continue
+                print(f"  {name:22s}          skipped (no MP_API_KEY)")
+                MP_STORED = True
+                continue
             if not run(name):
                 failed.append(name)
         if failed:

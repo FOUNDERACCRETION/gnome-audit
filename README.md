@@ -69,7 +69,9 @@ and runs `run_all.py --check`. The runner deletes the committed contents of `res
 first, so the check cannot pass on stale files, and `run_all.py` exits non-zero if any
 phase crashes even when the check itself passes. The Actions tab holds the log; a green
 run means every number in the abstract, and the Section 4.3 table, was regenerated on
-hardware the author does not own.
+hardware the author does not own. The two Materials Project analyses need an API key and
+do not run there; their stored output is kept so the figures build, and any check that
+reads it is labelled `[stored, not regenerated here]` in the log.
 
 ## Citing
 

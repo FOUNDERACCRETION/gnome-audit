@@ -241,3 +241,9 @@ with phase11_hostile reporting FAILED. Two separate defects:
 
 Lesson recorded because it generalises: results committed to the repository make a
 reproduction check self-confirming unless they are deleted first.
+
+The first run under the new guard went red, correctly: deleting results/ also removed
+known_baseline.csv, which the Materials Project phase produces and which the runner
+cannot regenerate without an API key, so figures.py crashed. All 20 checked quantities
+reproduced from the raw CSVs in that same run. The two MP-derived files are now exempt
+from the delete and any check reading them is labelled "[stored, not regenerated here]".

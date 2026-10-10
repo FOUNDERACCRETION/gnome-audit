@@ -23,7 +23,12 @@ jobs:
       - name: Delete committed results so the check cannot pass on stale files
         run: |
           mkdir -p results
-          find results -type f \( -name '*.csv' -o -name '*.png' -o -name '*.json' \) -delete
+          # known_baseline.csv and mp_completeness.csv come from the two Materials Project
+          # phases, which this runner skips for lack of an API key. They are kept so the
+          # figures can build; run_all.py labels any check that reads them as stored
+          # rather than regenerated. Everything else must be rebuilt from the raw CSVs.
+          find results -type f \( -name '*.csv' -o -name '*.png' -o -name '*.json' \) \
+               ! -name 'known_baseline.csv' ! -name 'mp_completeness.csv' -delete
           ls -la results
       - name: Regenerate results and check against the paper
         run: python run_all.py --skip q2_known_baseline,q2b_completeness
