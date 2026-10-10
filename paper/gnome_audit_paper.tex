@@ -1053,7 +1053,10 @@ require the dataset authors' hull construction, which is not released.
 \paragraph{Neither functional is ground truth.} r$^2$SCAN is more accurate than PBE for
 formation energies on average \citep{kingsbury2022prm}, but not uniformly: for transition
 metals and intermetallics the two are comparable and PBE is sometimes better
-\citep{kothakonda2023,bartel2019}. The noise floor is substantial: experiment-versus-
+\citep{kothakonda2023,bartel2019}, and for copper SCAN and r$^2$SCAN overstabilise the
+Cu$^{2+}$ state relative to Cu$^{+}$ where PBE+$U$ reproduces experiment
+\citep{bae2025}. A low flip rate for a chemistry, as we find for copper, therefore says
+only that the two functionals agree there, not that either is right. The noise floor is substantial: experiment-versus-
 experiment MAE is 0.082 eV/atom \citep{kirklin2015}, and MP2020 correction uncertainties
 alone can move near-hull polymorphs across the boundary \citep{wang2021mp2020}.
 
@@ -1262,6 +1265,11 @@ Pnictides, omitted for width, run from 16.7\% at zero threshold to 2.2\% at 50 m
 
 \bibitem[An et al.(2026)]{an2026} Y.~An, S.~Zhu, J.~Montoya, X.~Guo and Z.~Wang,
 ``Predicting Novel Stable Materials for Experimental Synthesis,'' arXiv:2607.01713 (2026).
+
+\bibitem[Bae et al.(2025)]{bae2025} S.~Bae, N.~Egawa and H.~Raebiger,
+``Misrepresentation of thermal stability across different oxidation states of copper
+compounds by SCAN meta-GGA functionals,'' \emph{Sci.~Rep.} \textbf{15}, 7567 (2025).
+doi:10.1038/s41598-025-92069-7
 
 \bibitem[Bartel et al.(2019)]{bartel2019} C.~J. Bartel, A.~W. Weimer, S.~Lany,
 C.~B. Musgrave and A.~M. Holder, ``The role of decomposition reactions in assessing
