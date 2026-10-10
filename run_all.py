@@ -137,11 +137,13 @@ if __name__ == "__main__":
         print("Running phases:")
         failed = []
         for name in ORDER:
-            if name in skip:
-                print(f"  {name:22s}          skipped (--skip)"); continue
-            if name in NEEDS_MP and not have_key:
-                print(f"  {name:22s}          skipped (no MP_API_KEY)")
-                MP_STORED = True
+            if name in skip or (name in NEEDS_MP and not have_key):
+                why = "--skip" if name in skip else "no MP_API_KEY"
+                print(f"  {name:22s}          skipped ({why})")
+                # Either way, if a Materials Project phase did not run, anything that
+                # reads its output is a stored value and must be labelled as one.
+                if name in NEEDS_MP:
+                    MP_STORED = True
                 continue
             if not run(name):
                 failed.append(name)
