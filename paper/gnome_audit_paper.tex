@@ -1113,7 +1113,11 @@ The repository at \url{https://github.com/FOUNDERACCRETION/gnome-audit} contains
 pre-registered decision rules with their commit history, one script per analysis phase,
 every machine-readable table and figure the paper draws on, pinned package versions, and
 a \texttt{run\_all.py} driver that regenerates the results directory from the two CSV
-files and checks each quantity in the abstract against the values printed here. The only
+files and checks twenty quantities against the values printed here: every number in the
+abstract, and the within-anion excess table of Section~\ref{sec:u}. A continuous-integration
+workflow performs that regeneration on a clean runner on every push that touches the
+analysis code, after deleting the stored results so that the check cannot pass on them,
+and fails if any phase crashes even when the surviving numbers match. The only
 components not reproducible without credentials are the two Materials Project pulls,
 which require a free API key.
 
