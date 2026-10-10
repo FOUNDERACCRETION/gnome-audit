@@ -20,6 +20,11 @@ jobs:
           curl -sSL -o data/stable_materials_r2scan.csv  https://storage.googleapis.com/gdm_materials_discovery/gnome_data/stable_materials_r2scan.csv
           curl -sSL -o data/stable_materials_summary.csv https://storage.googleapis.com/gdm_materials_discovery/gnome_data/stable_materials_summary.csv
           python -c "import pandas as pd; r=pd.read_csv('data/stable_materials_r2scan.csv'); s=pd.read_csv('data/stable_materials_summary.csv', usecols=['MaterialId']); print(len(r), len(s))"
+      - name: Delete committed results so the check cannot pass on stale files
+        run: |
+          mkdir -p results
+          find results -type f \( -name '*.csv' -o -name '*.png' -o -name '*.json' \) -delete
+          ls -la results
       - name: Regenerate results and check against the paper
         run: python run_all.py --skip q2_known_baseline,q2b_completeness
       - uses: actions/upload-artifact@v4

@@ -217,3 +217,27 @@ chalcogenide 58.5%, intermetallic 64.1%, hydride 67.3%. 3d excess by completenes
 +8.1 / +9.9 / +5.3pp. Not a completeness artefact. Hull-distance matching vs MP impossible
 (energy_above_hull floored at 0). Corrected the paper's claim about MP hull construction:
 the r2SCAN thermo type is NOT restricted to fully-recomputed systems; the mixed scheme is.
+
+# Phase 6c: CI caught a provenance gap — 2026-10-10
+
+The first clean-runner reproduction (GitHub Actions, run 38042500440) came back green
+with phase11_hostile reporting FAILED. Two separate defects:
+
+1. phase11_hostile.py crashed at the rank-correlation line: pandas .corr(method="spearman")
+   imports scipy, which is deliberately not a dependency. Both series were already ranks,
+   so the argument was redundant; removed. The crash was silent in earlier sessions because
+   sections A-C print before it.
+2. Everything after that line had therefore never executed. Section D (within-anion
+   Fe/Co/Ni excess) is the source of Table tab:feexcess in Section 4.3 — the table the
+   round-3 referee pass called the paper's most important reframing. The numbers in the
+   paper were correct but were produced ad hoc and no committed script regenerated them.
+   Section D rewritten to compute Fe, Co and Ni excess over the no-that-element baseline
+   within each anion class, writing results/within_anion_excess.csv. All 21 rows reproduce
+   the paper exactly (Fe oxide +5.0, bcs +41.0; Co oxide +4.6, bcs +34.0; Ni oxide +10.3,
+   intermetallic +2.0).
+3. run_all.py now exits non-zero when any phase fails, and the workflow deletes the
+   committed results/ before running, so a green badge cannot rest on stale files.
+   Eight Section 4.3 quantities added to the headline check (now 20 checks, not 12).
+
+Lesson recorded because it generalises: results committed to the repository make a
+reproduction check self-confirming unless they are deleted first.

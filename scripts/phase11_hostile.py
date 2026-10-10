@@ -75,15 +75,29 @@ print("\nC. anion-class flip rate: MP reference vs 'All' reference")
 t=r.groupby("anion").agg(n=("flip","size"),flip_MP=("flip","mean"),flip_All=("flip_all","mean"))
 t=t[t.n>=500].sort_values("flip_MP",ascending=False)
 print((t.assign(flip_MP=t.flip_MP*100,flip_All=t.flip_All*100)).round(1).to_string())
+# both series are already ranks, so Pearson on ranks IS Spearman; avoids a scipy dependency
 print(f"   rank correlation of the two orderings: "
-      f"{t.flip_MP.rank().corr(t.flip_All.rank(),method='spearman'):.3f}")
+      f"{t.flip_MP.rank().corr(t.flip_All.rank()):.3f}")
 
-# D. Fe within anion class
-fe=r[els.map(lambda e:"Fe" in e)]
-print("\nD. Fe-containing materials, flip rate by anion class (is it Fe or Fe-oxide?)")
-d=fe.groupby("anion").agg(n=("flip","size"),flip=("flip","mean"))
-d=d[d.n>=100]; d["flip"]=d.flip*100
-print(d.round(1).sort_values("flip",ascending=False).to_string())
-nofe=r[~els.map(lambda e:"Fe" in e)]
-print("   non-Fe baseline by anion:")
-d2=nofe.groupby("anion").agg(flip=("flip","mean")); print((d2.flip*100).round(1).to_string())
+# D. open-shell d element excess WITHIN anion class.
+# Per-element rates are confounded with the anion classes an element tends to occur in,
+# so the quantity to read is the excess over the no-that-element baseline inside each class.
+# This is the source table for Section 4.3 (tab:feexcess).
+print("\nD. Within-anion excess flip rate for Fe, Co, Ni")
+rows=[]
+for sym in ("Fe","Co","Ni"):
+    has=els.map(lambda e,s=sym: s in e).values
+    with_=r[has]; without=r[~has]
+    a=with_.groupby("anion").agg(n=("flip","size"),flip=("flip","mean"))
+    b=without.groupby("anion").agg(flip=("flip","mean"))
+    j=a.join(b,rsuffix="_without")
+    j=j[j.n>=100]
+    for anion,v in j.iterrows():
+        rows.append(dict(element=sym,anion=anion,n_with=int(v.n),
+                         flip_with=round(v.flip*100,1),
+                         flip_without=round(v.flip_without*100,1),
+                         excess_pp=round((v.flip-v.flip_without)*100,1)))
+exc=pd.DataFrame(rows).sort_values(["element","excess_pp"],ascending=[True,False])
+print(exc.to_string(index=False))
+exc.to_csv("results/within_anion_excess.csv",index=False)
+print("   -> results/within_anion_excess.csv")

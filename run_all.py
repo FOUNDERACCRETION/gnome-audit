@@ -62,6 +62,27 @@ CHECKS = [
      lambda: 100*_row("results/budget_repeated.csv", {"budget": 0.2}, "random_mean"), 20.1, 0.1),
 ]
 
+def _excess(el, anion):
+    for r in csv.DictReader(open("results/within_anion_excess.csv")):
+        if r["element"] == el and r["anion"] == anion:
+            return float(r["excess_pp"])
+    raise KeyError(f"{el}/{anion} not in within_anion_excess.csv")
+
+# Section 4.3, tab:feexcess. The claim the whole section rests on is that the Fe excess is
+# SMALLEST in oxides (where PBE gets a +U) and largest where it does not.
+CHECKS += [
+    ("Fe excess, boride/carbide/silicide (pp)",
+     lambda: _excess("Fe", "boride/carbide/silicide"), 41.0, 0.1),
+    ("Fe excess, pnictide (pp)", lambda: _excess("Fe", "pnictide"), 35.3, 0.1),
+    ("Fe excess, intermetallic (pp)", lambda: _excess("Fe", "intermetallic"), 34.2, 0.1),
+    ("Fe excess, oxide (pp, must be the smallest)", lambda: _excess("Fe", "oxide"), 5.0, 0.1),
+    ("Co excess, boride/carbide/silicide (pp)",
+     lambda: _excess("Co", "boride/carbide/silicide"), 34.0, 0.1),
+    ("Co excess, oxide (pp)", lambda: _excess("Co", "oxide"), 4.6, 0.1),
+    ("Ni excess, oxide (pp)", lambda: _excess("Ni", "oxide"), 10.3, 0.1),
+    ("Ni excess, intermetallic (pp)", lambda: _excess("Ni", "intermetallic"), 2.0, 0.1),
+]
+
 def known_aggregate():
     n = f = 0.0
     for r in csv.DictReader(open("results/known_baseline.csv")):
@@ -109,11 +130,19 @@ if __name__ == "__main__":
                 sys.exit(f"missing {d}; see REPRODUCE.md section 2")
         Path("results").mkdir(exist_ok=True)
         print("Running phases:")
+        failed = []
         for name in ORDER:
             if name in skip:
                 print(f"  {name:22s}          skipped (--skip)"); continue
             if name in NEEDS_MP and not have_key:
                 print(f"  {name:22s}          skipped (no MP_API_KEY)"); continue
-            run(name)
+            if not run(name):
+                failed.append(name)
+        if failed:
+            # Do NOT let the check paper over a crashed phase: results/ may be committed,
+            # so the check can pass on stale files while the code that made them is broken.
+            print(f"\n{len(failed)} PHASE(S) FAILED: {', '.join(failed)}")
+            check(mp=have_key or Path("results/known_baseline.csv").exists())
+            sys.exit(1)
     ok = check(mp=have_key or Path("results/known_baseline.csv").exists())
     sys.exit(0 if ok else 1)

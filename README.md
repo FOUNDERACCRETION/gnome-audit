@@ -46,7 +46,7 @@ data/                 NOT in the repository; two GNoME CSVs, see REPRODUCE.md
 | `phase8_referee.py` | §4.2, 4.12 | Benjamini–Hochberg over elements; budget over 20 cluster-wise splits; per-element cluster CIs | `per_element_clustered.csv`, `budget_repeated.csv` |
 | `phase9_selection.py` | §4.7 | Propensity model for recomputation; inverse-probability weighting | `ipw_cells.csv` |
 | `phase10_robust.py` | §3.5, 4.9 | Cluster-robust sandwich SEs (three clusterings); alternative cluster definition | `logit_cluster_robust.csv` |
-| `phase11_hostile.py` | §4.3, 4.4, 4.5, 4.14 | Pre-registered gate 6 (hull-distance strata); directional shift Δ; "All" reference; Fe/Co excess by anion; PBE-stable check | printed tables → `phase11.log` |
+| `phase11_hostile.py` | §4.3, 4.4, 4.5, 4.14 | Pre-registered gate 6 (hull-distance strata); directional shift Δ; "All" reference; within-anion Fe/Co/Ni excess; PBE-stable check | `within_anion_excess.csv`, tables → `phase11.log` |
 | `q2_known_baseline.py` | §4.11 | **Needs MP API key.** Pulls MP materials with GGA/GGA+U and r²SCAN thermo; same cells | `known_baseline.csv` |
 | `q2b_completeness.py` | §4.11, 4.14, §7 | **Needs MP API key.** MP-side r²SCAN hull completeness; gradient within completeness terciles; hull-distance-matched Q2 | `mp_completeness.csv`, `mp_*_raw.csv` |
 | `figures.py`, `figures2.py`, `figures3.py` | Figs 1–6 | Plots from `results/` only | `fig*.png` |
@@ -65,8 +65,11 @@ All random draws use `numpy.random.default_rng(20261009)`.
 `.github/workflows/reproduce.yml` runs on every push to `master` and on demand: a fresh
 Linux runner clones the repository, downloads the two GNoME CSVs from DeepMind's bucket,
 regenerates `results/` from scratch (all phases except the two Materials Project pulls)
-and runs `run_all.py --check`. The Actions tab holds the log; a green run means every
-number in the abstract was regenerated on hardware the author does not own.
+and runs `run_all.py --check`. The runner deletes the committed contents of `results/`
+first, so the check cannot pass on stale files, and `run_all.py` exits non-zero if any
+phase crashes even when the check itself passes. The Actions tab holds the log; a green
+run means every number in the abstract, and the Section 4.3 table, was regenerated on
+hardware the author does not own.
 
 ## Citing
 
