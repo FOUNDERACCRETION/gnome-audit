@@ -186,3 +186,34 @@ Stratified, comparability fails in both directions.
   is itself a selected subset; same caveat as the GNoME side.
 - 4-element known cells are small (n = 108-297). Treat those deltas as indicative.
 - Both sides use each functional's own hull; neither is ground truth.
+
+# Phase 6: referee rounds, hostile pass and reproduction check — 2026-10-10
+
+Three referee reports were generated and answered (REFEREE_REPORT_3.md in the paper
+build is the hostile pass). Analyses added in response, all run from results/:
+- phase7/phase8/phase10: prototype clustering (8,429 clusters, ICC 0.138, design effect
+  3.14), cluster bootstrap CIs everywhere, BH over elements, budget over 20 cluster-wise
+  splits, sandwich SEs on the logit (2.77x inflation on open-shell d).
+- phase9: propensity/IPW for recomputation selection. Spread 22.0 -> 21.9pp. Null.
+- phase11: pre-registered gate 6 (hull-distance strata) had NOT been run. Run late;
+  gradient survives in every PBE band. Directional shift Delta added (oxide+3d +11.3,
+  pnictide+3d +9.6, intermetallic -12.4 meV/atom). Fe/Co excess by anion class
+  reverses the Section 4.3 framing: +5pp in oxides (U applied) vs +34 to +41 outside
+  (no U). 25 non-PBE-stable rows excluded.
+- phase2 "All" reference promoted to partial hull-completeness probe: oxide/intermetallic
+  ratio 2.1 -> 1.4, ordering preserved.
+
+Reproduction: run_all.py --check compares the 12 abstract quantities against results/.
+12/12 matched on 2026-10-10. The check found that phase10_robust.py's last logged run
+had crashed after the regression (KeyError '_g'); the script was fixed and re-run, and
+the alternative-clustering intervals quoted in Section 3.3 reproduced exactly.
+
+Open at this point: MP-side r2SCAN hull-completeness probe (q2b_completeness.py),
+repository URL, endorser, pre-submission scoop check.
+
+# Phase 6b: MP-side hull completeness (q2b_completeness.py) — run 2026-10-10
+Median r2SCAN completeness by anion: oxide 37.0%, bcs 42.0%, pnictide 53.3%, halide 58.2%,
+chalcogenide 58.5%, intermetallic 64.1%, hydride 67.3%. 3d excess by completeness tercile:
++8.1 / +9.9 / +5.3pp. Not a completeness artefact. Hull-distance matching vs MP impossible
+(energy_above_hull floored at 0). Corrected the paper's claim about MP hull construction:
+the r2SCAN thermo type is NOT restricted to fully-recomputed systems; the mixed scheme is.

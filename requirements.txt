@@ -1,0 +1,10 @@
+# Exact versions used for every number in the paper (Python 3.10, Windows 11).
+pandas==2.3.3
+numpy==2.2.6
+matplotlib==3.10.9
+# Only the two Materials Project pulls (q2_known_baseline.py, q2b_completeness.py)
+# need network access; they use the standard library plus:
+requests>=2.31
+# Deliberately absent: scipy, scikit-learn, pymatgen, mp-api. The logistic
+# regression, bootstraps and sandwich estimator are implemented by hand in numpy
+# so the analysis has no dependency that could silently change a number.

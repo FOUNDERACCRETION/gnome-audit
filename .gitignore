@@ -1,3 +1,8 @@
 data/
-*.csv
-!results/*.csv
+results/mp_*_raw.csv
+results/*.log
+*.pyc
+__pycache__/
+mp_api_key.txt
+scripts/q2_smoke*.py
+results/phase10_old.log

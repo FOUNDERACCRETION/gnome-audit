@@ -3,9 +3,10 @@ import csv, json, random, time
 from collections import defaultdict
 import requests
 
-KEY=open("/mnt/c/research/mp_api_key.txt").read().strip()
+import os
+KEY=os.environ.get("MP_API_KEY") or open(os.environ.get("MP_API_KEY_FILE","/mnt/c/research/mp_api_key.txt")).read().strip()
 H={"X-API-KEY":KEY}; B="https://api.materialsproject.org/materials/thermo/"
-OUT="/mnt/c/research/gnome-audit/results"
+OUT="results"
 FIELDS="material_id,thermo_type,energy_above_hull,nelements,chemsys"
 random.seed(20261009)
 
