@@ -358,8 +358,8 @@ t = open(TEX).read()
 i = t.find("\\section{Per-element results}")
 if i > 0:
     seg = t[i:t.find("\\end{longtable}", i)]
-    for m in re.finditer(r"([A-Z][a-z]?)(?:\$\^\{\*\}\$)?\s*&\s*(\d+)\s*&\s*([\d.]+)", seg):
-        el, n, f = m.group(1), int(m.group(2)), float(m.group(3))
+    for m in re.finditer(r"([A-Z][a-z]?)(?:\$\^\{\*\}\$)?\s*&\s*((?:\d|\{,\})+)\s*&\s*([\d.]+)", seg):
+        el, n, f = m.group(1), int(m.group(2).replace("{,}", "")), float(m.group(3))
         if el not in pe: continue
         seen += 1
         cmp(f"app:element {el} n", float(n), float(pe[el]["n"]), 0.5)

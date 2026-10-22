@@ -35,7 +35,7 @@ analysis output by the same \texttt{check\_paper.py} that checks the main text.
 \section{Cell-level results with cluster bootstrap intervals}\label{app:cells}
 
 This section lists all disjoint cells with $n \ge 500$. Intervals resample prototype
-clusters. The final column is the ratio of the cluster interval width to the naive binomial width.
+clusters. The final column is the ratio of the cluster interval width to the naive Wald binomial width.
 
 \footnotesize
 \begin{longtable}{llccrrrr}
@@ -48,46 +48,47 @@ $n_{\text{el}}$ & Anion & Ln & 3$d$ & $n$ & Rate & Cluster 95\% CI & Widen \\
 $n_{\text{el}}$ & Anion & Ln & 3$d$ & $n$ & Rate & Cluster 95\% CI & Widen \\
 \midrule
 \endhead
-4 & oxide & no & yes & 2478 & 30.7\% & [27.7, 33.8] & 1.69 \\
+4 & oxide & no & yes & 2{,}478 & 30.7\% & [27.7, 33.8] & 1.69 \\
 3 & chalcogenide & no & yes & 564 & 30.3\% & [24.9, 36.5] & 1.53 \\
-4 & pnictide & yes & yes & 4573 & 30.1\% & [25.9, 33.8] & 2.96 \\
+4 & pnictide & yes & yes & 4{,}573 & 30.1\% & [25.9, 33.8] & 2.96 \\
 3 & boride/carbide/silicide & no & yes & 575 & 29.6\% & [24.1, 35.3] & 1.51 \\
-4 & boride/carbide/silicide & no & yes & 4501 & 25.2\% & [21.5, 29.5] & 3.14 \\
+4 & boride/carbide/silicide & no & yes & 4{,}501 & 25.2\% & [21.5, 29.5] & 3.14 \\
 3 & pnictide & no & yes & 813 & 24.0\% & [19.9, 28.7] & 1.51 \\
-4 & boride/carbide/silicide & yes & yes & 4561 & 22.8\% & [18.5, 27.4] & 3.65 \\
+4 & boride/carbide/silicide & yes & yes & 4{,}561 & 22.8\% & [18.5, 27.4] & 3.65 \\
 4 & halide & no & yes & 794 & 22.4\% & [17.5, 27.9] & 1.80 \\
 3 & oxide & no & no & 921 & 21.7\% & [18.7, 24.9] & 1.17 \\
-3 & intermetallic & no & yes & 2667 & 21.1\% & [18.4, 24.0] & 1.80 \\
-3 & intermetallic & yes & yes & 2056 & 19.0\% & [15.9, 22.4] & 1.91 \\
-4 & oxide & no & no & 3318 & 18.9\% & [16.7, 21.4] & 1.79 \\
-4 & oxide & yes & yes & 1399 & 18.1\% & [14.2, 22.0] & 1.94 \\
-4 & pnictide & no & yes & 5736 & 17.8\% & [14.7, 21.0] & 3.18 \\
-3 & halide & no & no & 1326 & 17.3\% & [14.3, 20.8] & 1.60 \\
-3 & pnictide & yes & no & 1349 & 16.8\% & [11.9, 22.4] & 2.63 \\
-4 & chalcogenide & no & yes & 1487 & 16.3\% & [13.4, 19.7] & 1.67 \\
-4 & pnictide & yes & no & 7412 & 13.9\% & [11.5, 16.5] & 3.15 \\
-4 & oxide & yes & no & 4232 & 13.8\% & [11.4, 16.6] & 2.52 \\
-4 & halide & no & no & 1404 & 13.1\% & [10.2, 16.6] & 1.82 \\
-4 & intermetallic & yes & yes & 10659 & 12.9\% & [11.6, 14.5] & 2.27 \\
+3 & intermetallic & no & yes & 2{,}667 & 21.1\% & [18.4, 24.0] & 1.80 \\
+3 & intermetallic & yes & yes & 2{,}056 & 19.0\% & [15.9, 22.4] & 1.91 \\
+4 & oxide & no & no & 3{,}318 & 18.9\% & [16.7, 21.4] & 1.79 \\
+4 & oxide & yes & yes & 1{,}399 & 18.1\% & [14.2, 22.0] & 1.94 \\
+4 & pnictide & no & yes & 5{,}736 & 17.8\% & [14.7, 21.0] & 3.18 \\
+3 & halide & no & no & 1{,}326 & 17.3\% & [14.3, 20.8] & 1.60 \\
+3 & pnictide & yes & no & 1{,}349 & 16.8\% & [11.9, 22.4] & 2.63 \\
+4 & chalcogenide & no & yes & 1{,}487 & 16.3\% & [13.4, 19.7] & 1.67 \\
+4 & pnictide & yes & no & 7{,}412 & 13.9\% & [11.5, 16.5] & 3.15 \\
+4 & oxide & yes & no & 4{,}232 & 13.8\% & [11.4, 16.6] & 2.52 \\
+4 & halide & no & no & 1{,}404 & 13.1\% & [10.2, 16.6] & 1.82 \\
+4 & intermetallic & yes & yes & 10{,}659 & 12.9\% & [11.6, 14.5] & 2.27 \\
 3 & oxide & yes & no & 730 & 12.2\% & [7.7, 16.9] & 1.93 \\
-4 & intermetallic & no & yes & 7459 & 12.1\% & [10.7, 13.5] & 1.88 \\
+4 & intermetallic & no & yes & 7{,}459 & 12.1\% & [10.7, 13.5] & 1.88 \\
 3 & boride/carbide/silicide & no & no & 845 & 11.7\% & [9.0, 14.9] & 1.36 \\
-3 & pnictide & no & no & 1473 & 11.1\% & [8.9, 13.6] & 1.47 \\
+3 & pnictide & no & no & 1{,}473 & 11.1\% & [8.9, 13.6] & 1.47 \\
 3 & halide & yes & no & 982 & 10.6\% & [6.7, 15.8] & 2.37 \\
-3 & chalcogenide & no & no & 1106 & 10.6\% & [8.4, 13.0] & 1.26 \\
-3 & chalcogenide & yes & no & 1076 & 10.1\% & [7.4, 13.7] & 1.77 \\
-3 & boride/carbide/silicide & yes & no & 1246 & 9.6\% & [6.1, 13.9] & 2.37 \\
-4 & halide & yes & yes & 1119 & 9.1\% & [5.3, 14.5] & 2.74 \\
-4 & boride/carbide/silicide & yes & no & 10287 & 9.1\% & [7.0, 11.4] & 4.02 \\
-4 & chalcogenide & yes & no & 1497 & 8.4\% & [6.3, 10.7] & 1.59 \\
-4 & boride/carbide/silicide & no & no & 3422 & 8.2\% & [6.8, 9.7] & 1.59 \\
-3 & intermetallic & no & no & 2618 & 7.9\% & [6.6, 9.3] & 1.30 \\
-4 & chalcogenide & no & no & 1467 & 7.0\% & [5.5, 8.7] & 1.22 \\
-3 & intermetallic & yes & no & 4661 & 6.4\% & [5.0, 8.0] & 2.11 \\
-4 & pnictide & no & no & 4675 & 6.0\% & [4.8, 7.3] & 1.82 \\
-4 & halide & yes & no & 3599 & 5.9\% & [2.8, 10.8] & 5.16 \\
-4 & intermetallic & yes & no & 18932 & 5.5\% & [4.6, 6.3] & 2.59 \\
-4 & intermetallic & no & no & 5025 & 4.0\% & [3.3, 4.7] & 1.31 \\
+3 & chalcogenide & no & no & 1{,}106 & 10.6\% & [8.4, 13.0] & 1.26 \\
+3 & chalcogenide & yes & no & 1{,}076 & 10.1\% & [7.4, 13.7] & 1.77 \\
+3 & boride/carbide/silicide & yes & no & 1{,}246 & 9.6\% & [6.1, 13.9] & 2.37 \\
+4 & halide & yes & yes & 1{,}119 & 9.1\% & [5.3, 14.5] & 2.74 \\
+4 & boride/carbide/silicide & yes & no & 10{,}287 & 9.1\% & [7.0, 11.4] & 4.02 \\
+4 & chalcogenide & yes & no & 1{,}497 & 8.4\% & [6.3, 10.7] & 1.59 \\
+4 & boride/carbide/silicide & no & no & 3{,}422 & 8.2\% & [6.8, 9.7] & 1.59 \\
+3 & intermetallic & no & no & 2{,}618 & 7.9\% & [6.6, 9.3] & 1.30 \\
+4 & chalcogenide & no & no & 1{,}467 & 7.0\% & [5.5, 8.7] & 1.22 \\
+3 & intermetallic & yes & no & 4{,}661 & 6.4\% & [5.0, 8.0] & 2.11 \\
+4 & pnictide & no & no & 4{,}675 & 6.0\% & [4.8, 7.3] & 1.82 \\
+4 & halide & yes & no & 3{,}599 & 5.9\% & [2.8, 10.8] & 5.16 \\
+4 & intermetallic & yes & no & 18{,}932 & 5.5\% & [4.6, 6.3] & 2.59 \\
+4 & intermetallic & no & no & 5{,}025 & 4.0\% & [3.3, 4.7] & 1.31 \\
+\bottomrule
 \end{longtable}
 \normalsize
 
@@ -114,34 +115,34 @@ El. & $n$ & Flip (\%) & El. & $n$ & Flip (\%) & El. & $n$ & Flip (\%) \\
 El. & $n$ & Flip (\%) & El. & $n$ & Flip (\%) & El. & $n$ & Flip (\%) \\
 \midrule
 \endhead
-Fe$^{*}$ & 5762 & 42.8 & Co$^{*}$ & 10972 & 33.2 & Cr$^{*}$ & 2553 & 30.7 \\
-Mn$^{*}$ & 4994 & 25.2 & F$^{*}$ & 2801 & 24.9 & As$^{*}$ & 6298 & 21.6 \\
-Ce$^{*}$ & 4236 & 20.5 & Mo$^{*}$ & 3910 & 20.2 & Sb$^{*}$ & 6577 & 19.9 \\
-O$^{*}$ & 13668 & 19.3 & V$^{*}$ & 3659 & 18.9 & Si$^{*}$ & 18382 & 18.4 \\
-W$^{*}$ & 3223 & 18.2 & Eu$^{*}$ & 2132 & 18.0 & U$^{*}$ & 2595 & 17.9 \\
-Te$^{*}$ & 2207 & 17.4 & Bi$^{*}$ & 6606 & 16.5 & Ag$^{*}$ & 4224 & 16.3 \\
-Gd & 976 & 16.0 & Zr & 7315 & 14.7 & P & 10265 & 14.2 \\
-Sc & 7842 & 13.9 & Se & 4543 & 13.6 & Ca & 5153 & 13.5 \\
-Au & 5932 & 13.5 & S & 3383 & 13.4 & Ni & 10142 & 13.4 \\
-Cl & 2172 & 13.2 & Y & 11046 & 13.1 & Ti & 5612 & 13.1 \\
-Hf & 6809 & 13.0 & C & 4735 & 12.9 & Ga & 10930 & 12.9 \\
-Dy & 11559 & 12.8 & K & 2795 & 12.7 & H & 2416 & 12.7 \\
-Cu & 6254 & 12.6 & Ho & 11988 & 12.6 & Pr & 8238 & 12.4 \\
-Sr & 3981 & 12.4 & Sn & 9436 & 12.3 & Lu & 6821 & 12.3 \\
-Li & 6305 & 12.2 & Ba & 3580 & 12.1 & Tb$^{*}$ & 12248 & 12.1 \\
-Nb & 5297 & 11.9 & Tm$^{*}$ & 10154 & 11.8 & Er$^{*}$ & 10434 & 11.6 \\
-Na & 2932 & 11.6 & Ta$^{*}$ & 5021 & 11.3 & Nd$^{*}$ & 9238 & 11.1 \\
-La$^{*}$ & 6546 & 11.0 & Rb$^{*}$ & 3141 & 10.8 & Pu & 1020 & 10.8 \\
-Br & 3440 & 10.6 & Pb$^{*}$ & 4377 & 10.6 & B$^{*}$ & 9496 & 10.6 \\
-Hg$^{*}$ & 4445 & 10.2 & Cs$^{*}$ & 2973 & 10.1 & Th$^{*}$ & 7632 & 9.9 \\
-Al$^{*}$ & 11933 & 9.7 & Np$^{*}$ & 1387 & 9.7 & Zn$^{*}$ & 7510 & 9.1 \\
-Cd$^{*}$ & 5356 & 9.0 & In$^{*}$ & 8259 & 9.0 & Os$^{*}$ & 8652 & 8.9 \\
-N$^{*}$ & 3845 & 8.7 & Pd$^{*}$ & 10381 & 8.1 & Re$^{*}$ & 3958 & 8.1 \\
-Ru$^{*}$ & 12381 & 8.1 & Sm$^{*}$ & 4852 & 8.0 & I$^{*}$ & 3091 & 7.9 \\
-Pt$^{*}$ & 13450 & 7.8 & Ge$^{*}$ & 4764 & 7.6 & Rh$^{*}$ & 14340 & 7.3 \\
-Yb$^{*}$ & 6265 & 7.1 & Be$^{*}$ & 2799 & 6.5 & Ir$^{*}$ & 15680 & 6.2 \\
-Tc$^{*}$ & 7350 & 5.7 & Mg$^{*}$ & 4073 & 5.7 & Pm$^{*}$ & 389 & 4.4 \\
-Pa$^{*}$ & 4251 & 3.6 & Ac$^{*}$ & 2181 & 1.4 &  & &  \\
+Fe$^{*}$ & 5{,}762 & 42.8 & Co$^{*}$ & 10{,}972 & 33.2 & Cr$^{*}$ & 2{,}553 & 30.7 \\
+Mn$^{*}$ & 4{,}994 & 25.2 & F$^{*}$ & 2{,}801 & 24.9 & As$^{*}$ & 6{,}298 & 21.6 \\
+Ce$^{*}$ & 4{,}236 & 20.5 & Mo$^{*}$ & 3{,}910 & 20.2 & Sb$^{*}$ & 6{,}577 & 19.9 \\
+O$^{*}$ & 13{,}668 & 19.3 & V$^{*}$ & 3{,}659 & 18.9 & Si$^{*}$ & 18{,}382 & 18.4 \\
+W$^{*}$ & 3{,}223 & 18.2 & Eu$^{*}$ & 2{,}132 & 18.0 & U$^{*}$ & 2{,}595 & 17.9 \\
+Te$^{*}$ & 2{,}207 & 17.4 & Bi$^{*}$ & 6{,}606 & 16.5 & Ag$^{*}$ & 4{,}224 & 16.3 \\
+Gd & 976 & 16.0 & Zr & 7{,}315 & 14.7 & P & 10{,}265 & 14.2 \\
+Sc & 7{,}842 & 13.9 & Se & 4{,}543 & 13.6 & Ca & 5{,}153 & 13.5 \\
+Au & 5{,}932 & 13.5 & S & 3{,}383 & 13.4 & Ni & 10{,}142 & 13.4 \\
+Cl & 2{,}172 & 13.2 & Y & 11{,}046 & 13.1 & Ti & 5{,}612 & 13.1 \\
+Hf & 6{,}809 & 13.0 & C & 4{,}735 & 12.9 & Ga & 10{,}930 & 12.9 \\
+Dy & 11{,}559 & 12.8 & K & 2{,}795 & 12.7 & H & 2{,}416 & 12.7 \\
+Cu & 6{,}254 & 12.6 & Ho & 11{,}988 & 12.6 & Pr & 8{,}238 & 12.4 \\
+Sr & 3{,}981 & 12.4 & Sn & 9{,}436 & 12.3 & Lu & 6{,}821 & 12.3 \\
+Li & 6{,}305 & 12.2 & Ba & 3{,}580 & 12.1 & Tb$^{*}$ & 12{,}248 & 12.1 \\
+Nb & 5{,}297 & 11.9 & Tm$^{*}$ & 10{,}154 & 11.8 & Er$^{*}$ & 10{,}434 & 11.6 \\
+Na & 2{,}932 & 11.6 & Ta$^{*}$ & 5{,}021 & 11.3 & Nd$^{*}$ & 9{,}238 & 11.1 \\
+La$^{*}$ & 6{,}546 & 11.0 & Rb$^{*}$ & 3{,}141 & 10.8 & Pu & 1{,}020 & 10.8 \\
+Br & 3{,}440 & 10.6 & Pb$^{*}$ & 4{,}377 & 10.6 & B$^{*}$ & 9{,}496 & 10.6 \\
+Hg$^{*}$ & 4{,}445 & 10.2 & Cs$^{*}$ & 2{,}973 & 10.1 & Th$^{*}$ & 7{,}632 & 9.9 \\
+Al$^{*}$ & 11{,}933 & 9.7 & Np$^{*}$ & 1{,}387 & 9.7 & Zn$^{*}$ & 7{,}510 & 9.1 \\
+Cd$^{*}$ & 5{,}356 & 9.0 & In$^{*}$ & 8{,}259 & 9.0 & Os$^{*}$ & 8{,}652 & 8.9 \\
+N$^{*}$ & 3{,}845 & 8.7 & Pd$^{*}$ & 10{,}381 & 8.1 & Re$^{*}$ & 3{,}958 & 8.1 \\
+Ru$^{*}$ & 12{,}381 & 8.1 & Sm$^{*}$ & 4{,}852 & 8.0 & I$^{*}$ & 3{,}091 & 7.9 \\
+Pt$^{*}$ & 13{,}450 & 7.8 & Ge$^{*}$ & 4{,}764 & 7.6 & Rh$^{*}$ & 14{,}340 & 7.3 \\
+Yb$^{*}$ & 6{,}265 & 7.1 & Be$^{*}$ & 2{,}799 & 6.5 & Ir$^{*}$ & 15{,}680 & 6.2 \\
+Tc$^{*}$ & 7{,}350 & 5.7 & Mg$^{*}$ & 4{,}073 & 5.7 & Pm$^{*}$ & 389 & 4.4 \\
+Pa$^{*}$ & 4{,}251 & 3.6 & Ac$^{*}$ & 2{,}181 & 1.4 &  & &  \\
 \bottomrule
 \end{longtable}
 \normalsize
@@ -226,7 +227,7 @@ a hypothesis not confirmed with the dataset authors.
 
 \paragraph{Materials Project queries.} Thermo records were retrieved through the public
 API on 9--10 October 2026 from
-\texttt{https://api.materialsproject.org/materials/thermo/}, paging at
+\url{https://api.materialsproject.org/materials/thermo/}, paging at
 \texttt{\_per\_page=1000}. The \texttt{thermo\_types} parameter is passed once per pull
 with the literal values \texttt{r2SCAN} and \texttt{GGA\_GGA+U} exactly as spelled; the
 capitalisation is the API's and is not interchangeable, and we observed the upper-case

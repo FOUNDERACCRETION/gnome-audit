@@ -135,6 +135,17 @@ was found by reading the code against the manuscript, with all layers green. `RE
 separates the two questions, lists those defects as calibration, and names the definitions,
 encodings, contrasts and the propensity model as the places most worth doubting.
 
+## Live Materials Project re-pull (22 October 2026)
+
+With `MP_API_KEY_FILE` set, `q2_known_baseline` and `q2b_completeness` query the live API
+instead of using the committed pulls. A full run on 22 October 2026 (Windows, Python 3.12)
+reproduced all 84 headline numbers with nothing stored. `check_paper.py` then reported 9
+mismatches, all Materials Project drift since the 9–10 October pulls the paper reports:
+`tab:mpcompl` boride/carbide/silicide n 2,365 → 2,367 (two r²SCAN entries added to MP),
+and eight `tab:known` interval endpoints moved by ≤ 0.17 pp. No point estimate changed.
+The committed pulls are the ones the paper reports; run `git checkout -- results` after a
+live run so they are not replaced.
+
 ## Determinism across machines (checked 22 October 2026)
 
 A full regeneration from a wiped `results/` on a second machine (Linux, Python 3.13,

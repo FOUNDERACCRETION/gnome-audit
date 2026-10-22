@@ -23,6 +23,7 @@ PBE(+$U$) and r$^2$SCAN stability verdicts in the GNoME materials database}}
 \date{18 October 2026}
 
 \begin{document}
+\sloppy % the many long \texttt{} identifiers and URLs otherwise overfill lines
 \maketitle
 
 \begin{abstract}
@@ -31,7 +32,7 @@ labels rest on a Materials Project-compatible generalised-gradient-approximation
 (GGA/GGA+$U$) workflow, not on a functional alone. Its authors report that 84\% of its discovered binaries
 and ternaries retain a negative decomposition energy under r$^2$SCAN, and 86.8\% of
 tested quaternaries remain stable on the r$^2$SCAN hull. We resolve that aggregate by chemistry over the
-139{,}541 GNoME materials released with r$^2$SCAN recalculations, a subset the dataset
+139{,}541 GNoME materials released with r$^2$SCAN recomputations, a subset the dataset
 authors selected rather than sampled, using cluster bootstrap intervals over 8{,}429
 structural-prototype proxy clusters.
 
@@ -39,7 +40,7 @@ The aggregate conceals a 26.7-point spread at fixed element count, from 4.0\%
 [3.3, 4.7] for plain quaternary intermetallics (no lanthanide, no 3$d$ metal) to 30.7\%
 [27.7, 33.8] for lanthanide-free 3$d$-containing quaternary oxides, a pair identified
 post hoc against a prospectively
-fixed threshold. Under our reading of the release's denser ``All'' reference set, the two cells sit at
+fixed threshold. Under our reading of the release's ``All'' reference set, the two cells sit at
 14.5\% and 37.4\%, preserving a 22.9-point spread while
 substantially reducing the ratio. Presence of a Materials Project Hubbard-$U$-list element is strongly associated with
 disagreement, conditional on the other covariates, in the fitted model over all
@@ -71,7 +72,7 @@ PBEsol/SCAN subset \citep{schmidt2022} using PBEsol geometries with SCAN energie
 rather than PBE. GNoME's own stability verdicts, which are
 what this paper analyses, rest on density functional theory (DFT) calculations at the
 Perdew--Burke--Ernzerhof (PBE) level \citep{pbe1996}, executed in VASP \citep{vasp1996}
-with Materials Project-compatible settings \citep{jain2013}, including a Hubbard $U$
+with Materials Project (MP)-compatible settings \citep{jain2013}, including a Hubbard $U$
 for eight transition metals in oxides and fluorides and the Materials Project 2020 (MP2020) correction scheme's empirical anion and
 GGA/GGA+$U$ mixing corrections \citep{wang2021mp2020}. The functional and
 correction choices differ across MatterGen, Alexandria and GNoME, so the question we ask
@@ -100,8 +101,9 @@ for analysing discrepancies between functional choices.''
 
 \subsection{What this paper measures, and what it does not}\label{sec:scope}
 
-We measure \emph{disagreement between two computational methods}: PBE and r$^2$SCAN
-assigning different stability classifications to the same material. We do not establish
+We measure \emph{disagreement between two computational methods}: a material released as
+stable at the PBE level whose r$^2$SCAN decomposition energy is positive (defined precisely
+in Section~\ref{sec:defs}). We do not establish
 which functional is closer to the truth for any material, and we say nothing about
 whether these compounds are stable in reality. We therefore use the term \emph{flip}
 throughout and avoid calling flipped labels ``incorrect''. Where we discuss practical
@@ -111,7 +113,7 @@ would say, not about nature. This constrains every claim that follows, including
 budget model of Section~\ref{sec:budget}, whose payoff is measured in disagreements
 surfaced rather than errors corrected.
 
-\subsection{Questions and contributions}
+\subsection{Questions and contributions}\label{sec:contrib}
 
 \begin{enumerate}
 \item \textbf{Q1.} Does the rate of disagreement vary systematically with chemistry,
@@ -126,7 +128,7 @@ about disagreement beyond proximity to the PBE hull, and by how much?
 
 Our contributions are: (i) a chemistry- and element-resolved map of stability-verdict
 disagreement between the two workflows on GNoME; (ii) stratified comparisons showing that a lanthanide-pooled form of the composition
-contrast is present within every hull-distance band, that the 3$d$-associated excess is
+contrast is present within every populated hull-distance band, that the 3$d$-associated excess is
 present within every band-gap bin, and that the contrast persists with cell size as a
 covariate, under inverse-probability weighting (IPW) for recomputation selection
 (Section~\ref{sec:ipw}), and outside the Hubbard-$U$-treated regime; (iii) the observation that the binary verdict change
@@ -155,7 +157,7 @@ place PBE(+$U$) and r$^2$SCAN energies on a single phase diagram \citep{kingsbur
 Two results bear directly on what follows. Kothakonda et al.\ tested r$^2$SCAN
 thermochemistry on more than 1{,}000 solids and concluded that for transition metals,
 intermetallics and weakly bound solids, GGAs are comparable to meta-GGAs, and that for
-Type 2 decomposition enthalpies PBE is slightly more accurate \citep{kothakonda2023}.
+the reaction class they label Type 2 decomposition enthalpies PBE is slightly more accurate \citep{kothakonda2023}.
 Bartel et al.\ reached a compatible verdict from the reaction side: across 646
 decomposition reactions that are not simply formation reactions, PBE (mean absolute error 70 meV/atom) and
 SCAN (59 meV/atom) perform similarly \citep{bartel2019}. Both are statements about error
@@ -200,12 +202,11 @@ literature search rather than as an established priority claim.
 
 \subsection{Datasets}\label{sec:datasets}
 
-\sloppy
 \paragraph{GNoME.} We use two files from the public release \citep{merchant2023}. The summary
 file, \texttt{stable\_materials\_summary.csv}, holds 554{,}054 unique material IDs with
 PBE-level decomposition energies, band gaps, space groups and cell information. The
 recomputation file, \texttt{stable\_materials\_r2scan.csv}, holds 139{,}541 unique IDs
-with r$^2$SCAN recalculations. It carries composition, element list, site count, space
+with r$^2$SCAN recomputations. It carries composition, element list, site count, space
 group and crystal system of its own, so the prototype clustering of
 Section~\ref{sec:cluster} and the log-sites term of Section~\ref{sec:logit} are defined
 for all 139{,}541. Band gap and the PBE decomposition energy come only from the summary
@@ -230,14 +231,19 @@ it the leave-one-out quantity the \emph{Relative} column was meant to hold; that
 which would otherwise be the most natural outcome, is empty in both released files. We take the MP-referenced
 column as primary because it reproduces the published aggregate, report the MP+OQMD
 variant as a sensitivity check, and examine the ``All'' column separately in
-Section~\ref{sec:allref} because a denser hull gives a materially different result.
+Section~\ref{sec:allref} because it gives a materially different result. The release does not
+document how the MP+OQMD and All hulls were built for the recomputation file; OQMD and WBM
+carry no r$^2$SCAN energies, so those hulls may mix functionals, and we treat rates against
+them as sensitivity checks rather than as hulls of known construction.
 Rates against ``All'' are computed from the recomputation file.
 
 Of the 117{,}043 recomputed materials that can be matched to a PBE decomposition energy,
 25 have a positive PBE value (the current release admits entries up to 1 meV/atom above
 the hull) and so are not PBE-stable under our $\le 0$ convention. They cannot be
 confirmed transitions and are excluded from every analysis that uses PBE energies; they are 0.02\% of the set
-and no reported number changes.
+and no reported number changes. ``PBE-stable'' throughout means a non-positive MP-referenced
+PBE decomposition energy in the summary file, a hull of Materials Project entries; it is not
+the GNoME-inclusive hull on which the release's own stability claim rests.
 
 \paragraph{How the r$^2$SCAN energies were produced.} Each material passes through a
 PBE pre-relaxation with PBE54 potentials, an r$^2$SCAN relaxation and an r$^2$SCAN
@@ -254,13 +260,13 @@ energies.
 \texttt{GGA\_GGA+U} and \texttt{r2SCAN} thermo types and keep entries present in both
 (Supplementary Section~S4 gives the exact query and a spelling pitfall in the thermo
 type). We retrieved 37{,}123 r$^2$SCAN and 152{,}426 GGA+$U$ documents; 35{,}176 material
-IDs carry both, of which 22{,}756 are stable at the GGA+$U$ level and therefore capable of
+IDs carry both, of which 22{,}756 are stable at the GGA(+$U$) level and therefore capable of
 flipping. The \texttt{r2SCAN} thermo type is distinct from the Materials Project's mixed
 scheme \citep{mpmixingdocs}: its hull is built from whichever r$^2$SCAN entries exist in
 a chemical system, with no requirement that every competing phase has been recomputed
 (Section~\ref{sec:allref}).
 
-\subsection{What ``PBE'' means here}
+\subsection{What \texorpdfstring{``PBE''}{"PBE"} means here}
 
 Throughout, ``PBE'' denotes the Materials Project-compatible level at which GNoME's
 labels were produced: PBE with, for eight transition metals (V, Cr, Mn, Fe, Co, Ni, Mo
@@ -293,8 +299,8 @@ Recomputation release            & 139{,}541 & all entries in the r$^2$SCAN file
 \quad matched to the summary file & 117{,}043 & \texttt{MaterialId} present in both \\
 \quad matched and PBE-stable      & 117{,}018 & 25 matched entries were not PBE-stable \\
 \quad matched, PBE-stable, $\le$4 elements & 116{,}789 & IPW outcome, censoring bounds (Sections~\ref{sec:ipw}, \ref{sec:selection}) \\
-Primary composition cells        & 135{,}044 & 40 cells with $n\ge500$ (Section~\ref{sec:defs}); excludes \\
-                                 &           & binaries, quinaries, hydrides and sub-threshold cells \\
+Primary composition cells        & 135{,}044 & 40 cells with $n\ge500$ (Section~\ref{sec:defs}); binaries, \\
+                                 &           & quinaries and hydrides all fall below the threshold \\
 Band-gap analysis                & 112{,}434 & finite positive gap (Section~\ref{sec:gap}) \\
 Budget evaluation                & 117{,}018 & needs a PBE energy; PBE-stable \\
 Inverse-probability weighting (IPW) & 371{,}870 & summary entries with $\le$4 elements \\
@@ -326,7 +332,7 @@ numerically immaterial, but the two outcomes are not the same quantity and we la
 them where both appear. We use \emph{flip} as shorthand for release-based disagreement throughout, and
 rates quoted without qualification are release-based. For Materials Project entries,
 where \texttt{energy\_above\_hull} is non-negative by construction, we define stability as
-$E_{\text{hull}} \le 10^{-6}$ eV/atom and flipping as GGA+$U$-stable with
+$E_{\text{hull}} \le 10^{-6}$ eV/atom and flipping as GGA(+$U$)-stable with
 $E_{\text{hull}}^{\text{r}^2\text{SCAN}} > 10^{-6}$.
 
 We classify each composition into one of seven mutually exclusive anion classes by
@@ -338,8 +344,9 @@ of the above). We flag the presence of a lanthanide (La--Lu; ``Ln'' in tables) a
 3$d$ transition metal (Sc--Zn). Cells are the Cartesian product of element count, anion class, lanthanide
 flag and 3$d$ flag, and are disjoint by construction. Only cells with $n \ge 500$ enter
 the primary analysis: forty cells qualify, holding 135{,}044 of the 139{,}541 materials.
-The 4{,}497 excluded are the binaries, the quinaries, the hydride class and roughly
-2{,}000 materials in sub-threshold cells, some of which sit at the high-flipping end, so
+No cell is excluded by rule: the 4{,}497 materials outside the forty cells all sit in
+cells below the threshold, namely the binaries, the quinaries, the hydride class and roughly
+2{,}000 materials in other thin cells, some of which sit at the high-flipping end, so
 the reported spread is if anything conservative. Per-element analyses use $n \ge 300$ and are not restricted
 by element count. Secondary analyses apply further minimum counts stated where they are
 used: 100 known materials per matched cell, 100 element-containing materials per class,
@@ -384,7 +391,7 @@ The prototype proxy is a choice, so we test it. Clustering on anonymised stoichi
 alone, ignoring space group (2{,}186 clusters, mean size 63.8), leaves the headline
 quaternary contrast essentially unaffected: 30.7\% [27.4, 34.0] against 4.0\%
 [3.3, 4.7], compared with 30.7\% [27.7, 33.8] against 4.0\% [3.3, 4.7] under the
-primary definition. Dropping the 5 largest clusters (10{,}730 materials, 7.7\% of the
+primary definition. Dropping the five largest clusters (10{,}730 materials, 7.7\% of the
 set) moves the headline contrast from $+26.7$ to $+26.8$ points, the 20 largest to
 $+27.3$ and the 50 largest to $+28.2$, so the largest clusters are if anything diluting
 it.
@@ -408,33 +415,40 @@ standard errors from a cluster-robust sandwich estimator: with $r_g = y_g - \hat
 residual vector of cluster $g$ and $s_g = X_g^{\top} r_g$ its score contribution,
 $\hat V = B \left(\sum_g s_g s_g^{\top}\right) B$ with $B = (X^{\top} W X)^{-1}$ and
 $W = \mathrm{diag}(\hat p(1-\hat p))$, clustering on the same structural prototypes used
-for the bootstrap; no finite-cluster correction is applied, since with 8{,}429 clusters
-the factor is negligible (Appendix~\ref{app:impl}). Relative to naive analytic errors this
+for the bootstrap; no finite-cluster correction is applied in this model, since with 8{,}429 clusters
+the factor is negligible (the hull-distance-adjusted fits of Table~\ref{tab:hullcont} and the
+context model of Section~\ref{sec:additivity} apply it; Appendix~\ref{app:impl}). Relative to naive analytic errors this
 inflates the standard error on the $U$-list coefficient by a factor of 2.77, between the
 two design-effect approximations above.
 
 \subsection{Pre-committed decision rules}\label{sec:prereg}
 
-The pre-committed primary rule was that a spread of $\ge 5$ percentage points between the
-highest and lowest cell, with non-overlapping intervals at fixed element count, would
-support a standalone analysis; below 3 points the result would be reported as a single
-parameter elsewhere. The secondary pre-committed claim was that lanthanide-containing
-materials would flip at or below the global rate, to be counted as refuted if they flipped
-above it. On the pre-committed comparison they do: 11.8\% against a global 13.0\%, on point
-estimates. We record two problems with that test rather than bank its result. The comparator was badly
+The pre-committed primary rule, evaluated on cells with $n \ge 500$ at fixed element
+count, was: a spread of $\ge 5$ percentage points between the highest and lowest cell with
+non-overlapping intervals supports a standalone analysis; a spread below 3 points, or
+intervals that all overlap, folds the result into a single parameter reported elsewhere;
+a spread of 3 to 5 points proceeds only if the comparison against known materials shows a
+separate effect. The file specifies naive bootstrap intervals with 1{,}000 resamples; the
+cluster intervals reported here are wider, and the rule's conditions hold under both. The
+secondary pre-committed claim was that lanthanide-containing materials would flip at or
+below the global rate at fixed element count, to be counted as refuted if they flipped
+above it. They do, within each element count and pooled (11.8\% against 13.0\%), on point
+estimates. We record three problems with that test rather than bank its result. The comparator was badly
 chosen: lanthanide-containing materials are 59.4\% of the recomputed set, so the global
 rate is largely their own (against non-lanthanide materials the gap is 11.8\% against
 14.8\%). And the marginal contrast is almost entirely composition: once anion class is
 held fixed the regression gives an odds ratio of 1.02 [0.93, 1.12], with the sign of
-the association reversing between anion classes (Section~\ref{sec:ln}). The
+the association reversing between anion classes (Section~\ref{sec:ln}). And the
+hypothesis was itself informed by the earlier unstratified inspection of these data
+(Section~\ref{sec:contrib}), so its confirmation is not an out-of-sample prediction. The
 pre-committed claim is confirmed as stated and uninformative as posed.
 
 The rules and the results were committed in that order, at \texttt{82d49db} and
 \texttt{c11ccf2} respectively, in the public repository. This is a sole-authored
 repository and git commit timestamps are set by the committer, so the ordering is
-asserted by us and attested by nobody; it should be read as a description of how we
+asserted by the author and attested by nobody; it should be read as a description of how we
 worked rather than as independent certification. What the repository does establish is
-content: the decision rules in \texttt{DECISION\_RULES.md} are those quoted above, and
+content: the decision rules in \texttt{DECISION\_RULES.md} are those paraphrased above, and
 the thresholds were not adjusted once the spread was known.
 
 \section{Results}
@@ -452,19 +466,19 @@ most this comparison can establish; the residual gaps are consistent with the re
 hull having been rebuilt since publication, and we do not claim exact agreement.
 
 \begin{figure}[tbp]\centering
-\begin{minipage}[t]{0.50\textwidth}\centering
+\begin{minipage}[t]{0.52\textwidth}\centering
 \includegraphics[width=\textwidth]{fig1_flip_by_chemistry.png}
 \end{minipage}\hfill
-\begin{minipage}[t]{0.44\textwidth}\centering
+\begin{minipage}[t]{0.46\textwidth}\centering
 \includegraphics[width=\textwidth]{fig4_per_element.png}
 \end{minipage}
 \caption{\textbf{Left:} flip rate by composition cell for quaternary GNoME materials.
-Cells are disjoint. Black bars are cluster bootstrap 95\% intervals; the grey bars behind
-them are the naive binomial intervals, shown to make the size of the correction visible.
+Cells are disjoint; B/C/Si abbreviates boride/carbide/silicide. Black bars are cluster bootstrap 95\% intervals; the grey bars behind
+them are the naive Wald binomial intervals, shown to make the size of the correction visible.
 The dashed line in both panels marks the flip rate over all element counts, 13.04\%,
 as labelled in the left-panel legend; the quaternary-only marginal is 12.65\%. \textbf{Right:} per-element flip rate, 30
 highest of 83 elements with $n\ge300$, with cluster bootstrap 95\% intervals. Red bars mark
-the eight elements receiving an MP2020 Hubbard $U$ in oxides and fluorides.}
+the eight elements receiving a Hubbard $U$ in oxides and fluorides in the MP-compatible workflow.}
 \label{fig:chem}
 \end{figure}
 
@@ -534,7 +548,10 @@ nor fluorine, quaternary materials containing one of the eight $U$-list elements
 within oxides and fluorides, where the $U$ is applied, flip at 32.8\%, 19.7\% and 13.7\%
 for quaternaries ($n=4{,}009$, 1{,}246 and 7{,}633). The groups are mutually
 exclusive and are the same indicators as the regression's 3$d$ encoding
-(Appendix~\ref{app:impl}).
+(Appendix~\ref{app:impl}). The Sc/Ti/Cu/Zn group shows an excess confined to oxides and
+fluorides (19.7\% against 13.7\%, but 7.2\% against 7.4\% elsewhere) that neither the
+$U$ reading nor the magnetism reading below covers; we list it with
+molybdenum and tungsten as unexplained.
 
 \paragraph{Second: across the $U$ boundary directly.} Within each anion class
 (Table~\ref{tab:feexcess}), the iron excess is smallest in oxides, where Fe receives a
@@ -556,7 +573,8 @@ composition class. The classes are coarse and their members differ in more than 
 transition metal, so these are associations rather than causal element effects.
 ``Without'' is the flip rate of materials in the same class lacking that element; the
 excess is in percentage points (pp), computed from unrounded rates. The oxide row, the
-only class in which Fe receives a $U$, is set in bold. Intervals are cluster bootstrap
+only class in which Fe receives a $U$ throughout, is set in bold; fluorides, a minority of
+the halide row, also receive it (third comparison below). Intervals are cluster bootstrap
 intervals over structural prototypes, 100{,}000
 replicates; one draw per replicate serves all three elements. Classes with fewer than 100
 element-containing materials are omitted, which removes the Fe-hydride row only. The final
@@ -585,7 +603,7 @@ halide                  & \phantom{0}476 & 24.4\% & 10.9\% & $+13.5$ [$+5.8$, $+
 \end{tabular}
 \end{table}
 
-\paragraph{Third: fluorides against the other halides.} MP2020 applies $U$ in oxides
+\paragraph{Third: fluorides against the other halides.} The MP-compatible input set applies $U$ in oxides
 \emph{and fluorides}, so within the halides, fluorine-containing materials receive it on
 the $U$-list metals and the chloride, bromide and iodide materials do not. The iron
 excess is $+8.8$ points among fluorine-containing halides against $+16.3$ among the
@@ -600,21 +618,28 @@ excess contributed by a $U$-list metal, $+6.3$ points among fluorides and $+7.8$
 the other halides, a contrast that is nearly flat; the per-element contrasts above are
 what carry the direction.
 
-\paragraph{Reading.} Elevated disagreement persists outside the $U$-treated regime,
-and the within-class excess attributable to a $U$-list element is largest there, so
+\paragraph{Reading.} The version of the selective-$U$ hypothesis tested here is that
+disagreement produced by the $+U$ treatment would concentrate in the oxide and fluoride
+chemistry where $U$ is applied. Elevated disagreement persists outside that regime, and
+the iron-associated within-class excess is largest there (the pooled $U$-list excess
+itself is not smaller where $U$ is applied: $+19.1$ points in oxides and fluorides
+against $+14.5$ outside, from the first comparison), so
 selective $U$ application is not a sufficient explanation. What
 follows is an association across composition classes, not a controlled intervention ---
 oxides, borides, pnictides and intermetallics differ in bonding, oxidation state,
 magnetic behaviour, competing phases and reference coverage, not only in whether a $U$
 is applied --- so we write that the smaller excesses in oxides are \emph{consistent with}
 partial suppression by the corrected treatment, and we do not claim that applying $U$
-causes the gradient to shrink. Where $U$ is applied, the iron excess shrinks from the $+13.5$ to $+41$ range of the
-no-$U$ classes to $+5.0$; cobalt's oxide excess is small, but so is its halide excess in a
+causes the gradient to shrink. Reference coverage is a further alternative: on the
+Materials Project side the r$^2$SCAN hulls of oxides are the least complete of any class
+(Section~\ref{sec:allref}), and incompleteness understates flips for iron-containing and
+iron-free oxides alike, compressing the excess. Where $U$ is applied, the iron excess shrinks from the $+34$ to $+41$ range of the
+classes receiving no $U$ (and $+13.5$ in the halides, where only fluorides receive it) to $+5.0$; cobalt's oxide excess is small, but so is its halide excess in a
 class that mostly receives no $U$; nickel runs the other way (Table~\ref{tab:feexcess}); and on
 the continuous scale of Section~\ref{sec:additivity} the oxide context is the lowest for
 Fe and Cr but the highest for Co. The partial-suppression reading therefore holds for
-iron, is ambiguous for cobalt, and does not hold for the $U$ list as a whole. The largest disagreements in the dataset are $U$-list
-elements in chemistry that receives no $U$, which is where Warford et al.\ identify the
+iron, is ambiguous for cobalt, and does not hold for the $U$ list as a whole. The highest within-class rates in
+Table~\ref{tab:feexcess} are iron in borides, pnictides and intermetallics, chemistry that receives no $U$, which is where Warford et al.\ identify the
 uncorrected potential-energy surface \citep{warford2026}; this is a statement about $U$
 specifically, since chalcogenides receive a full anion correction and still show a
 $+30.0$-point iron excess.
@@ -629,7 +654,7 @@ functionals'' for fcc Ni and hcp Co. \citet{fusingh2018} describe a degradation 
 to PBE across V, Co, Ni and Pd, and in Fe$_3$C obtain 6.87 $\mu_B$ per three-iron formula
 unit under SCAN against 5.75 under PBE and a room-temperature saturation value of 5.3, an
 excess of about 30\% over experiment. \citet{mejia2019} trace the elemental
-over-magnetisation, at least 20\% in bcc Fe, to the iso-orbital indicator;
+over-magnetisation, about 20\% in bcc Fe, to the iso-orbital indicator;
 \citet{tran2020} find it in intermetallic ferromagnets generally; and
 \citet{kothakonda2023} find it stronger under r$^2$SCAN than under SCAN, with iron's
 moment overestimated by 24\% against SCAN's 17\%. A functional that
@@ -650,7 +675,7 @@ claim it: the released files carry no magnetisation field, and the discriminatin
 calculation is a spin-polarised against non-spin-polarised comparison on a small set of
 iron and cobalt borides and pnictides with their competing phases.
 
-Separately, we asked which element set best discriminates the released outcomes, refitting the
+Separately, we asked which element set best discriminates the released outcomes, refitting a reduced form of the
 regression of Section~\ref{sec:logit} with the MP $U$ list, its 3$d$ subset alone, and
 an alternative 3$d$ indicator that drops Mo and W and adds Cu. The Cu-including
 indicator fits worst (log-likelihood $-50{,}590$ against $-50{,}472$ for the $U$ list
@@ -673,7 +698,9 @@ additive shift $\delta_e$ in element $e$'s reference contributes $\sum_e x_e \de
 with $x_e$ the atomic fraction of element $e$, to
 the compound and the identical amount to the competing combination, and cancels. What the
 argument does not cover is an error in the computed energy of a particular competing
-phase. The broader question is whether $\Delta$, the per-material r$^2$SCAN-minus-PBE
+phase, including an elemental metal that is itself a decomposition product: an
+over-stabilised bcc iron raises the decomposition energy of every compound that decomposes
+to it, and does not cancel. The broader question is whether $\Delta$, the per-material r$^2$SCAN-minus-PBE
 displacement of the decomposition energy defined in Section~\ref{sec:shift}, is an
 additive function of composition.
 A naive test fails here: our cells are \emph{defined} by element presence, so an additive
@@ -686,7 +713,7 @@ improves the fit by $\Delta R^2 = 0.009$ on $n=117{,}018$ with 30 added terms, a
 fitted contributions spread widely (Table~\ref{tab:context}): iron's is $-31$ meV/atom per
 unit atomic fraction in oxides and $+208$ in chalcogenides, a spread of 239 meV/atom
 where the additive model constrains it to be constant; at a realistic iron fraction of
-0.1 to 0.25 that is 24 to 60 meV/atom between contexts, two to four times the cell-level
+0.1 to 0.25 that is 24 to 60 meV/atom between contexts, between one-and-a-half and four times the cell-level
 mean shifts of Section~\ref{sec:shift}. The design is full rank (113 columns, condition
 number $7.0\times10^{2}$), so every within-element contrast is identified
 (Appendix~\ref{app:impl}). We read the table as a descriptive fit rather than a
@@ -745,7 +772,7 @@ logistic model; the threshold is
 Benjamini--Hochberg (BH) at 0.05 across the five elements, applied in ascending $p$
 order.}
 \label{tab:jointtest}
-\small\begin{tabular}{lrll}
+\small\begin{tabular}{lrrr}
 \toprule
 Element & $\chi^2_5$ & $p$ & BH threshold \\
 \midrule
@@ -769,9 +796,9 @@ disagreement concentrates near the hull. Testing it was pre-committed as one of 
 
 Table~\ref{tab:hulldist} stratifies quaternary materials by PBE decomposition energy.
 Flip rate rises steeply toward the hull in every cell (monotonically in all but the
-plain-intermetallic column, whose two deepest bands are 0.8\% and 0.5\%), confirming the
+3$d$-free intermetallic column, whose two deepest bands are 0.8\% and 0.5\%), confirming the
 Note 2 observation: 3$d$-free intermetallics (lanthanide pooled) go from 0.5\% in the $(-0.1,-0.05]$ band to 15.9\% in
-$(-0.01, 0]$. And the chemistry gradient is present inside every band: in
+$(-0.01,0]$. And the chemistry gradient is present inside every band: in
 $(-0.05,-0.02]$, 3$d$ oxides flip at 23.1\% and 3$d$-free intermetallics at 1.2\%; in
 $(-0.01,0]$, 40.1\% against 15.9\%. The within-band spread between those two cells is
 roughly 11, 22, 25 and 24 points across the four populated bands. The cells do differ in position (median PBE decomposition energy $-20.8$ meV/atom for
@@ -782,20 +809,20 @@ roughly 11, 22, 25 and 24 points across the four populated bands. The cells do d
 Cells with fewer than 200 materials in a band are shown as a dash; counts in
 parentheses. These
 cells pool the lanthanide flag, because the lanthanide-resolved cells are too thin to
-stratify further by band, so the oxide+3$d$ minus plain-intermetallic contrast here is
+stratify further by band, so the oxide+3$d$ minus 3$d$-free-intermetallic contrast here is
 smaller than the 26.7 points of Section~\ref{sec:cells}. Column counts differ from the quaternary cell totals of Section~\ref{sec:ipw} by at
 most ten materials per cell.}
 \label{tab:hulldist}
-\footnotesize\setlength{\tabcolsep}{4pt}
+\footnotesize\setlength{\tabcolsep}{3pt}
 \begin{tabular}{lrrrrrr}
 \toprule
 PBE band (eV/atom) & oxide+3$d$ & oxide & pnictide+3$d$ & pnictide & interm.+3$d$ & interm. \\
 \midrule
 $\le-0.1$ & --- & 3.9\% (563) & 5.5\% (494) & 0.5\% (794) & 2.0\% (402) & 0.8\% (930) \\
-$(-0.1,-0.05]$ & 11.1\% (443) & 6.1\% (1063) & 14.6\% (1748) & 1.3\% (2364) & 3.2\% (1987) & 0.5\% (2710) \\
-$(-0.05,-0.02]$ & 23.1\% (1070) & 15.5\% (2132) & 19.8\% (3608) & 8.2\% (3810) & 7.9\% (6709) & 1.2\% (7777) \\
-$(-0.02,-0.01]$ & 29.4\% (744) & 24.3\% (1159) & 28.3\% (1752) & 20.8\% (1970) & 16.0\% (3947) & 4.3\% (4512) \\
-$(-0.01,0]$ & 40.1\% (802) & 27.8\% (1142) & 37.7\% (1493) & 27.0\% (1442) & 27.2\% (3263) & 15.9\% (4937) \\
+$(-0.1,-0.05]$ & 11.1\% (443) & 6.1\% (1{,}063) & 14.6\% (1{,}748) & 1.3\% (2{,}364) & 3.2\% (1{,}987) & 0.5\% (2{,}710) \\
+$(-0.05,-0.02]$ & 23.1\% (1{,}070) & 15.5\% (2{,}132) & 19.8\% (3{,}608) & 8.2\% (3{,}810) & 7.9\% (6{,}709) & 1.2\% (7{,}777) \\
+$(-0.02,-0.01]$ & 29.4\% (744) & 24.3\% (1{,}159) & 28.3\% (1{,}752) & 20.8\% (1{,}970) & 16.0\% (3{,}947) & 4.3\% (4{,}512) \\
+$(-0.01,0]$ & 40.1\% (802) & 27.8\% (1{,}142) & 37.7\% (1{,}493) & 27.0\% (1{,}442) & 27.2\% (3{,}263) & 15.9\% (4{,}937) \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -806,15 +833,15 @@ natural cubic spline in the continuous PBE decomposition energy, on the 117{,}01
 materials for which that quantity is observed and non-positive, with cluster-robust
 standard errors over the 7{,}822 structural prototypes present in that subset. The
 covariate is the summary file's MP-referenced decomposition energy, so both sides of the
-comparison use the same reference hull. The adjustment is substantial and the chemistry
+comparison use the same reference set (the two hulls themselves differ by functional). The adjustment is substantial and the chemistry
 association survives it. Hull distance more than doubles the model's pseudo-$R^2$, from
 0.068 to 0.156, so proximity carries a great deal of information that composition does
 not; the $U$-list odds ratio nevertheless falls only from 3.53 [3.19, 3.92] to 3.43
-[3.07, 3.83]. The oxide and pnictide terms move the other way, from 2.63 to 3.16 and from
-1.93 to 2.58, because those classes, taken as a whole, sit farther from the hull than the reference
-class (Table~\ref{tab:hulldist}), so the unadjusted rate understates their association and
+[3.07, 3.83]. Every anion-class term moves the other way, oxide from 2.63 to 3.16 and pnictide from
+1.93 to 2.58, consistent with those classes, taken as a whole, sitting farther from the hull than the reference
+class, so that the unadjusted rate understates their association and
 adjusting for position strengthens rather than explains it. Adding
-interactions between hull proximity and chemistry shows the two are not separable:
+interactions between hull proximity and chemistry shows the two interact:
 $U$-list by proximity is 0.52 [0.43, 0.63] and oxide by proximity 0.62 [0.50, 0.76], where
 proximity increases toward the hull, so the chemistry multiplier compresses as the hull is approached while
 the gap in percentage points widens up to the penultimate band and is roughly flat in
@@ -823,8 +850,8 @@ the last, because the baseline rate rises much faster.
 \begin{table}[htbp]\centering
 \caption{Composition odds ratios with and without a flexible continuous adjustment for
 distance below the PBE hull, on the 117{,}018 materials with an observed non-positive PBE
-decomposition energy. The spline is a six-degree-of-freedom natural cubic basis with knots
-at equally spaced quantiles of that energy. Intervals are cluster-robust over the 7{,}822
+decomposition energy. The spline is a five-column natural cubic basis (truncated-power form with linear
+tails) with knots at the sextiles of that energy, columns standardised. Intervals are cluster-robust over the 7{,}822
 structural prototypes in this subset. The
 reference class is a lanthanide- and 3$d$-free hydride or intermetallic; element-count
 and log-sites terms are included in both fits but not shown.}
@@ -961,8 +988,8 @@ at most 2.4 points, the ordering of the seven tabulated cells is preserved, and 
 untabulated cells each swap with an adjacent tabulated cell. Inverse-probability weighting corrects
 only for selection on the observed features entered into the model; if the authors
 selected on something we cannot see, it does not correct for it. The weights need their
-own accounting (Appendix~\ref{app:impl}): fitted propensities over the 365{,}504 PBE-stable $\le$4-element entries reach
-$7.1\times10^{-218}$ (on entries that were not recomputed; among recomputed entries the
+own accounting (Appendix~\ref{app:impl}): fitted propensities over the 365{,}504 PBE-stable $\le$4-element entries fall to the
+underflow limit of the fit, $e^{-500} \approx 7.1\times10^{-218}$ (on entries that were not recomputed; among recomputed entries the
 minimum is $1.52\times10^{-6}$), indicating severe estimated lack of overlap, and the
 estimate depends on a propensity floor of $10^{-2}$, below which
 26 recomputed entries fall. Untrimmed, Kish's effective sample size collapses to 5; at the floor it is
@@ -972,8 +999,9 @@ and this floor, not as a corrected population rate.
 
 \begin{table}[htbp]\centering
 \caption{Quaternary cells with the lanthanide flag pooled (as in
-Table~\ref{tab:hulldist}), naive against inverse-propensity-weighted flip rate. Selected
-rows; full table in the repository. Spreads are computed from unrounded rates.}
+Table~\ref{tab:hulldist}), naive against inverse-probability-weighted flip rate. Selected
+rows; full table in the repository. Rates are computed on all 116{,}814 recomputed entries
+with at most four elements, including the 25 that are not PBE-stable. Spreads are computed from unrounded rates.}
 \label{tab:ipw}
 \small\begin{tabular}{lrrr}
 \toprule
@@ -1048,14 +1076,15 @@ Lanthanide content has an odds ratio of 1.02 with an interval straddling unity, 
 should not be read as ``lanthanides do not matter''. The model above has no
 interactions, so a single lanthanide coefficient averages effects of opposite sign.
 Adding lanthanide $\times$ anion and $U$-list $\times$ anion interactions improves the
-fit by a likelihood-ratio $\chi^2$ of 879 on 10 degrees of freedom, read as descriptive
+fit by a likelihood-ratio $\chi^2$ of 879 on 14 degrees of freedom (in a reduced
+specification without the other-3$d$ and site-count terms, with hydride as its own class), read as descriptive
 since it assumes independent observations. The model-based
 average marginal effect of lanthanide content, from the interaction model with
 cluster bootstrap intervals, is $-8.3$ [$-11.4$, $-4.8$] in halides, $-7.8$ [$-10.7$,
 $-4.9$] in oxides and $+8.9$ [$+6.5$, $+11.6$] in pnictides, while the pooled effect
 over all classes is $+0.2$ points [$-0.7$, $+1.2$]; the unadjusted within-class
-differences, pooled over element counts up to four, are $-9.9$, $-9.2$ and $+7.0$ points. The sign reversal is the one reported
-non-parametrically in Section~\ref{sec:ln}. Element count enters negatively --- each
+differences, pooled over all element counts, are $-9.9$, $-9.2$ and $+7.0$ points. The sign reversal is the one reported
+nonparametrically in Section~\ref{sec:ln}. Element count enters negatively --- each
 standard deviation reduces the odds by about 16\% --- consistent with the marginal rates
 (binaries 19.8\%, ternaries 14.6\%, quaternaries 12.7\%).
 
@@ -1098,7 +1127,7 @@ the disagreement is a flag, not a verdict.
 \subsection{Matched against known materials, the aggregate comparison inverts}\label{sec:known}
 
 GNoME materials flip at 13.0\%; Materials Project entries computed at both levels flip
-at 14.9\%, so at face value the GNoME entries appear \emph{more} functional-robust. This
+at 14.9\%, so at face value the GNoME entries appear \emph{more} robust to the choice of functional. This
 runs opposite to the source paper's own aggregate comparison (84\% survival against the
 Materials Project's 90\%), which uses different populations and reference hulls.
 
@@ -1151,7 +1180,7 @@ Cell & $n_{\text{G}}$ & GNoME & $n_{\text{K}}$ & Known & $\delta$ & 95\% CI \\
 \end{table}
 
 \begin{figure}[htbp]\centering
-\includegraphics[width=0.44\textwidth]{fig3_gnome_vs_known.png}
+\includegraphics[width=0.71\textwidth]{fig3_gnome_vs_known.png}
 \caption{Workflow disagreement in matched composition cells. Points above the diagonal
 are cells where GNoME materials disagree more than previously catalogued materials of
 the same broad composition class and element count; labels mark the ten cells whose
@@ -1164,13 +1193,14 @@ The aggregate figures and the matched cells run in opposite directions, and the
 difference comes from which cells are compared. Within the twenty matched cells GNoME
 disagrees \emph{more}, 15.50\% against 14.01\%; standardised to the known-materials
 cell mix the difference is $+1.23$ points [$+0.22$, $+2.28$] and to the GNoME mix
-$+1.85$ [$+0.57$, $+3.11$], both excluding zero. What differs in sign is the comparison
+$+1.85$ [$+0.57$, $+3.11$], both excluding zero (bootstrap means; the plug-in
+standardised differences are $+1.22$ and $+1.84$). What differs in sign is the comparison
 between the \emph{full} populations: the full release is 9.8\% oxide where the
 matched-cell GNoME population is 33.3\% oxide, so restricting to cells the known
 materials also populate upweights oxides roughly threefold. That is a descriptive
 decomposition of two rates, not a demonstration that composition \emph{causes} the
 difference. The Materials Project side is a confirmed transition while the GNoME side
-above is release-based; recomputing the GNoME side on the confirmed-transition basis
+above is release-based; re-evaluating the GNoME side on the confirmed-transition basis
 leaves seventeen cells (three fall below 500 GNoME materials on that basis) with
 standardised differences of $+1.33$ [$+0.18$, $+2.51$] and
 $+2.25$ [$+0.83$, $+3.66$], the same answer slightly more strongly.
@@ -1181,15 +1211,15 @@ the Materials Project side, the r$^2$SCAN hulls of known oxides are the least co
 any anion class (median 37\% of competing GGA entries recomputed) and those of
 intermetallics the most complete among the large classes (64\%,
 Section~\ref{sec:allref}); completing the Materials Project side alone could shrink the
-$+17$-point gap in 3$d$ oxides or leave it unchanged, so under that one-sided operation
-the gap is an upper figure in the weak sense, and not a bound on a comparison in which
+$+17$-point gap in 3$d$ oxides or leave it unchanged, so the $+17$ is an upper figure only in the weak sense that this one-sided operation
+cannot exceed it, and not a bound on a comparison in which
 both sides are completed. In intermetallics, GNoME's own hulls gain most in proportional terms from the denser
 all-entries reference,
 so part of its $-7.7$-point advantage there may be incompleteness on the GNoME side.
 The comparison is also not matched on distance below the PBE hull, the single covariate
 most likely to confound it; the Materials Project thermo documents expose
-\texttt{decomposition\_enthalpy} \citep{bartel2019}, so the omission is ours and cheap
-to repair. The defensible claim is therefore:
+\texttt{decomposition\_enthalpy} \citep{bartel2019}, so the omission is ours; we leave it to a
+follow-up rather than add an unregistered analysis at this stage. The defensible claim is therefore:
 \emph{within the analysed datasets, functional-level disagreement differs between GNoME
 and previously catalogued materials in a chemistry-dependent manner, and the direction
 of the aggregate comparison differs from that seen in several matched composition
@@ -1242,7 +1272,7 @@ Budget & Uniform random & Composition & Hull distance & Both \\
 \end{table}
 
 \begin{figure}[htbp]\centering
-\includegraphics[width=0.46\textwidth]{fig2_budget.png}
+\includegraphics[width=0.71\textwidth]{fig2_budget.png}
 \caption{Disagreements surfaced against recomputation budget under four ranking
 policies, anchored at zero budget. Means over 20 cluster-wise splits; the shaded bands,
 $\pm1$ standard deviation across splits, are barely wider than the lines.}
@@ -1262,8 +1292,8 @@ policy beats hull distance alone by $+5.42$ points (paired s.d.\ 1.39, 20 of 20 
 composition does do is add to hull distance: the two together surface 45.8\% at a 20\%
 budget, and the gain persists at every budget and widens in absolute terms as the budget
 grows. Closest-first ranking uses the variable without fitting anything, so composition might
-only be standing in for a better-modelled hull distance. On 20 fresh splits we therefore
-added a hull-distance-only logistic model with twenty quantile-bin dummies, and a
+only be standing in for a better-modelled hull distance. On 20 cluster-wise splits drawn afresh (the first coincides with the first split above) we therefore
+added a hull-distance-only logistic model over twenty quantile bins of PBE depth, and a
 cross-fitted combined model in which the estimation half is split five ways by prototype
 cluster. The twenty-bin
 hull model did not improve held-out catch over closest-first ranking ($-0.06$ points at
@@ -1345,7 +1375,7 @@ oxide-to-intermetallic ratio compresses from 2.1-fold under the MP reference to 
 under ``All''. We report these as estimates under two reference-set definitions, not as
 bounds, since two observed choices do not bracket the chemistry effect; what the
 comparison establishes is that the effect is substantially reference-set sensitive. We
-kept the MP reference as primary because it is the quantity the source paper reports,
+kept the MP reference as primary because it reproduces the source paper's published aggregate,
 not because it gives the larger spread.
 
 Table~\ref{tab:allcells} answers the narrower question on the two cells the abstract
@@ -1386,7 +1416,7 @@ lowest median coverage of any class and intermetallics the highest among the lar
 classes, opposite to what the ``All'' comparison would suggest for GNoME's own hulls. When the known materials are split into completeness
 terciles (cut at 46.2\% and 61.1\%), the flip rate for materials containing a 3$d$
 element is 21.5\%, 19.8\% and 18.7\% against 13.4\%, 9.9\% and 13.4\% for materials
-without one, an excess of +8.2, +9.9 and +5.3 points that remains above +5 in the most
+without one, an excess of $+8.2$, $+9.9$ and $+5.3$ points that remains above $+5$ in the most
 complete tercile; within the lowest tercile, the only one holding more than a handful of
 3$d$ oxides (1{,}205, against 9 and 0 in the other two), they flip at 21.0\% against
 14.6\% for plain intermetallics ($n=315$). Stratifying on the coverage we can count does not remove the
@@ -1419,8 +1449,8 @@ what can be claimed.
 
 \paragraph{Element count.} Coverage is 12.9\% for binaries, 31.8\% for ternaries and
 31.4\% for quaternaries, then collapses to 0.13\% for quinaries (229 of 177{,}392) and
-zero for senaries (0 of 4{,}792). GNoME presents discovery in combinatorial spaces of five or more elements as a central
-result \citep{merchant2023}, and quinaries make up 32\% of the released dataset, yet
+zero for senaries (0 of 4{,}792). GNoME highlights discovery in combinatorial spaces of five or more elements
+\citep{merchant2023}, and quinaries make up 32\% of the released dataset, yet
 the recomputed coverage there is insufficient to support the stratified claims we make
 for ternaries and quaternaries. Our logistic model finds disagreement risk
 \emph{decreasing} with element count, but extrapolating a fitted trend past the edge of
@@ -1450,7 +1480,10 @@ model-dependent sensitivity analysis, not as a replacement for those bounds.
 \paragraph{Unmatched identifiers.} 22{,}498 r$^2$SCAN material IDs do not appear in the
 current summary file. Their distribution over anion class and element count is close to
 that of the matched remainder, and their flip rate is 2.0 points lower (11.4\% against
-13.4\%), which does not suggest selective omission of high-disagreement entries; we state a
+13.4\%), which does not suggest selective omission of high-disagreement entries. One
+element is affected wholesale: every ytterbium-containing entry in the r$^2$SCAN file
+(6{,}265 of them, 28\% of the unmatched set) lacks a summary-file row, so no PBE-matched
+analysis contains ytterbium. We state a
 release-version mismatch as a hypothesis (Supplementary Section~S4). Including or
 excluding them changes no conclusion.
 
@@ -1478,10 +1511,11 @@ particular benchmark result.
 
 \paragraph{For MLIP training data.} Warford et al.\ argue that selectively applied $U$
 splits a training set into incompatible surfaces \citep{warford2026}.
-Section~\ref{sec:u} shows that label disagreement is associated with exactly the elements
+Section~\ref{sec:u} shows that label disagreement is associated with the element set
 they identify, though our comparisons do not establish the correction as its cause.
-Datasets that omit $+U$ entirely, such as MatPES \citep{kaplan2025} and MP-ALOE
-\citep{kuner2025}, avoid the issue \citep{warford2026}.
+Warford et al.\ report that datasets omitting $+U$ entirely, such as MatPES
+\citep{kaplan2025} and MP-ALOE \citep{kuner2025}, avoid the issue \citep{warford2026};
+nothing here tests that.
 
 \paragraph{What would settle the physics.} Our evidence is statistical: $U$-list
 content predicts disagreement; the 3$d$-associated excess persists within band-gap
@@ -1511,9 +1545,9 @@ formation energies on average \citep{kothakonda2023}, and than SCAN and PBEsol
 \citep{kingsbury2022prm}, but not uniformly: for transition metals and intermetallics
 PBE and r$^2$SCAN are comparable \citep{kothakonda2023}, PBE and SCAN perform similarly
 on decomposition reactions \citep{bartel2019}, and for copper SCAN and r$^2$SCAN
-overstabilise Cu$^{2+}$ relative to Cu$^{+}$, an error that PBE+$U$ avoids but that a $U$
+over-stabilise Cu$^{2+}$ relative to Cu$^{+}$, an error that PBE+$U$ avoids but that a $U$
 added to SCAN does not repair \citep{bae2025}; the Materials Project applies no $U$ to
-copper, so GNoME's copper labels carry no $U$. A low flip rate for a chemistry says only that
+copper, so GNoME's copper labels carry no $U$ and neither workflow benefits from that repair. A low flip rate for a chemistry says only that
 the two functionals agree there.
 
 \paragraph{Clustering is corrected but the proxy is imperfect.} Our prototype proxy
@@ -1544,7 +1578,7 @@ displacement need not produce equal changes in flip probability across classes s
 at different distances from the hull.
 
 \paragraph{The matched comparison is the weakest step.} Four-element known cells are
-small ($n=108$--$297$), ``known'' means previously catalogued including theoretical
+small ($n=108$ to $297$), ``known'' means previously catalogued including theoretical
 entries, the comparison is unmatched on hull distance (Section~\ref{sec:known}), and it is
 the comparison most exposed to selection on the candidates themselves. We treat it as
 exploratory throughout.
@@ -1556,9 +1590,8 @@ relative to iron and cobalt is not accounted for by that argument, or by any oth
 test here. The triclinic excess is unexplained.
 
 \paragraph{Scope.} The GNoME results apply to materials with at most four elements that
-were selected for r$^2$SCAN recomputation; the 229 recomputed quinaries are included in
-the global rate but support no stratified claim. Sections~\ref{sec:known} and
-\ref{sec:allref} additionally report quantities computed on Materials Project entries,
+were selected for r$^2$SCAN recomputation; the 266 recomputed quinaries (229 of them matched to the summary file) are included in
+the global rate but support no stratified claim. Sections~\ref{sec:known} and~\ref{sec:allref} additionally report quantities computed on Materials Project entries,
 which are drawn from a different population and are labelled as such throughout.
 
 \section{Conclusion}
@@ -1570,7 +1603,7 @@ recomputations ranges from 4.0\% [3.3, 4.7] for plain quaternary intermetallics 
 30.7\% [27.7, 33.8] for lanthanide-free 3$d$-containing quaternary oxides. The contrast
 persists under correction for non-independence among substitution-generated structures
 and under inverse-probability weighting for recomputation selection; a
-lanthanide-pooled form of it is present within every hull-distance band and
+lanthanide-pooled form of it is present within every populated hull-distance band and
 every generation-pipeline and training-set split examined, and the 3$d$-associated excess
 within every band-gap bin; its magnitude is
 substantially sensitive to the reference-set definition, the oxide-to-intermetallic
@@ -1583,16 +1616,17 @@ combined with. Within a post-selected element set, cluster-robust joint tests re
 equal context coefficients for iron, chromium, manganese and nickel and not for
 cobalt. Underlying the binary verdict is a chemistry-dependent
 difference in mean displacement on top of much larger scatter: $+14.7$ meV/atom for 3$d$
-oxides against $-8.9$ for plain intermetallics, with per-material spreads of 24 to 56
+oxides against $-8.9$ for plain intermetallics, with within-cell standard deviations of 24 to 56
 meV/atom. Membership of the Materials Project Hubbard-$U$ list is a strong observed
 compositional predictor, and selective application of $U$ is not a sufficient
 explanation of the pattern: elevated disagreement persists outside the $U$-treated
-regime, and the largest disagreements in the dataset are $U$-list elements in chemistry
-receiving no $U$. The smaller Fe- and Co-associated excesses in oxides are consistent
-with partial suppression by the corrected treatment but do not establish it, and nickel
-runs the other way. We do not test a physical mechanism; a plausible candidate is
+regime, and the highest within-class iron rates are in borides, pnictides and
+intermetallics, chemistry receiving no $U$. The smaller Fe-associated excess in oxides is consistent
+with partial suppression by the corrected treatment but does not establish it; for cobalt
+the reading is ambiguous, and nickel runs the other way. We do not test a physical mechanism; a plausible candidate is
 meta-GGA over-magnetisation of itinerant 3$d$ systems. Lanthanide content is associated
-with a below-average rate overall, as pre-committed, but the association reverses sign
+with a below-average rate overall, as the pre-committed claim anticipated (a claim
+informed by an earlier look at the same data), but the association reverses sign
 with the anion and is near zero when averaged over classes because within-class effects
 of opposite sign cancel.
 
@@ -1616,7 +1650,8 @@ insufficient for the stratified claims made here.
 All input data are public: the two GNoME CSV files are served from the DeepMind bucket
 \texttt{gs://gdm\_materials\_discovery/gnome\_data/} (139{,}541 and 554{,}054 rows at the
 time of access, 9 October 2026), and the Materials Project thermo records were retrieved
-through the public API on 9--10 October 2026. Supplementary Section~S4 gives the full
+through the public API on 9--10 October 2026. The Supplementary Material (Sections S1--S4, Tables S1--S3) is a separate
+document deposited with this paper; its Section~S4 gives the full
 input manifest. The repository at \url{https://github.com/FOUNDERACCRETION/gnome-audit}
 contains the pre-committed decision rules with their commit history, one script per
 analysis phase, every machine-readable table and figure the paper draws on, pinned
@@ -1629,7 +1664,9 @@ deleting the stored results so that the checks cannot pass on them.
 \texttt{VALIDATION.md} states what each check asserts and what none of them can
 establish. The only components not reproducible without credentials are the two
 Materials Project pulls, which require a free API key; their cached outputs are
-committed. Reproducing a number is not the same as the number being right: these checks
+committed, and the Materials Project changes over time: a live re-pull on 22 October
+2026 returned two additional boride/carbide/silicide entries and moved eight matched-cell
+interval endpoints by at most 0.2 points, with every point estimate unchanged. Reproducing a number is not the same as the number being right: these checks
 test consistency between code, results and manuscript, and they will pass on a
 statistical choice that is internally consistent and still wrong. \texttt{REVIEWER.md}
 names the definitions, encodings, contrasts and the propensity model as the places most
@@ -1642,8 +1679,8 @@ AI assistance. Claude (Anthropic) was used to assist with implementation of the 
 code and preparation of manuscript text. I independently defined the research question and
 scope, obtained the data, specified and committed the decision rules before the stratified
 analysis, executed the Materials Project queries, reviewed and tested the code and outputs,
-and revised the final manuscript. The verification actually performed is described below
-rather than asserted here. All
+and revised the final manuscript. The verification actually performed is described above, under
+Data and code availability, and in the next paragraph, rather than asserted here. All
 analytical decisions, interpretations and claims are my responsibility. The complete code,
 machine-readable outputs, validation checks and reproducibility workflow are publicly
 available.
@@ -1690,7 +1727,7 @@ analysis use 20{,}000 replicates; the within-anion excesses 100{,}000; the match
 comparison of Section~\ref{sec:known} 20{,}000; the coarser-clustering check 20{,}000;
 and the average marginal effects 1{,}000 refits, since each replicate there refits the
 interaction model. The primary seed is \texttt{numpy.random.default\_rng(20261009)}; the average
-marginal effects use 20261011, the context-spread intervals pool 20261009 and 20261012,
+marginal effects and the matched known-materials comparisons use 20261011, the context-spread intervals pool 20261009 and 20261012,
 and the seed-stability checks below use further seeds.
 Resampling is aggregated to the cluster level: drawing $G$ prototypes with replacement
 has the same distribution as multinomial counts over them, so a replicate is a
@@ -1698,10 +1735,9 @@ matrix-vector product against per-cluster count and flip-sum vectors. Replicates
 which either arm of a contrast is empty are dropped.
 
 The cluster pool is in every case the set of prototypes present in the subset being
-resampled. Cell intervals resample the prototypes within the cell; per-element rates
-resample the prototypes among materials containing the element, while the
-element-versus-global contrast resamples the full pool once per replicate and recomputes
-both rates from that draw; within-anion excesses resample the prototypes of the anion
+resampled. Cell intervals resample the prototypes within the cell; per-element rates and the
+element-versus-global contrast both come from one full-pool draw per replicate, from which
+the element rate and the global rate are recomputed; within-anion excesses resample the prototypes of the anion
 class and recompute both rates from the same draw. In the matched comparison
 (\texttt{phase37\_matched\_cluster.py}) the GNoME side draws prototypes once per
 replicate across all twenty matched cells together, and the Materials Project side is
@@ -1709,15 +1745,17 @@ resampled at the material level, the two sides independently; those intervals ar
 cluster-adjusted on the GNoME side only.
 
 \paragraph{Monte Carlo stability.}\label{sec:mc} Replicate counts are chosen so that
-the seed-to-seed movement of every printed endpoint is below the precision it is printed
+the seed-to-seed movement of every endpoint we tested is below the precision it is printed
 to, with two exceptions noted below (the average marginal effects and the spread
 intervals of Table~\ref{tab:context}). On the lower endpoint of the Fe oxide excess, the spread across five seeds falls from
 0.90 points at 400 replicates to 0.035 at 100{,}000, close to the $B^{-1/2}$ rate
 (\texttt{phase33\_percentile\_conv.py}); at 100{,}000 its upper endpoint moves 0.042 points across seeds. At 20{,}000 replicates the Benjamini--Hochberg
 set is the same 53 of 83 elements under all five seeds (at 300 replicates the count ranges from 51
 to 53), and the
-headline endpoints [27.7, 33.8] and [3.3, 4.7] are stable to the tenth of a point
-across seeds of the per-cell bootstrap. The
+headline endpoints [27.7, 33.8] and [3.3, 4.7] come from 100{,}000 replicates at one
+seed; at 600 replicates they move by up to 0.5 points across five seeds
+(\texttt{phase31\_stability.py}), and the $B^{-1/2}$ scaling observed for the Fe oxide
+endpoint implies movement of order 0.04 points at 100{,}000. The
 average marginal effects are one exception, at 1{,}000 refits: the $U$-list endpoints
 move 0.03 and 0.05 points across two seeds, while the pooled lanthanide effect's upper
 endpoint moves 0.10 and should be read as $+1.1$ to $+1.2$. The spread intervals of
@@ -1747,23 +1785,25 @@ and inference in \texttt{phase43\_context\_identify.py}).} Table~\ref{tab:contex
 from an ordinary-least-squares fit of $\Delta = \sum_e c_e x_e + \sum_{e \in S}\sum_{a
 \in A} \gamma_{ea}\, x_e\, \mathbb{1}[\text{class}=a] + \varepsilon$ on the 117{,}018
 matched, PBE-stable materials, where $x_e$ is the atomic fraction of element $e$ in the released
-(unreduced) composition, the first sum runs over all 83 elements, $S = \{$Fe, Co, Ni, Mn,
+(unreduced) composition, the first sum runs over the 83 elements present in this subset (ytterbium is absent), $S = \{$Fe, Co, Ni, Mn,
 Cr$\}$ and $A$ is the six non-hydride anion classes. There is no intercept, and the
-interaction block is not reference-coded: all six contexts are retained for each element
-of $S$, giving 30 interaction terms and 113 columns. The design is full rank (numerical rank 113 of 113 at tolerance $1.6\times10^{-9}$,
+interaction block is not reference-coded: an interaction is kept when at least 100
+materials carry the element in that class, which retains all six non-hydride contexts for
+every element of $S$ and drops the hydride context for each (nickel, at 99, is the
+nearest), giving 30 interaction terms and 113 columns. The design is full rank (numerical rank 113 of 113 at tolerance $1.6\times10^{-9}$,
 condition number $7.0\times10^{2}$), but narrowly. For each $e \in S$ the sum of its six
 interaction columns equals its main-effect column on every row except hydride-class
 materials, so the transformation $c_e \to c_e + t$, $\gamma_{ea} \to \gamma_{ea} - t$
 for every non-hydride context $a$ leaves every non-hydride fitted value unchanged; only
 the hydride rows, of which 286 contain a listed element (99 Ni, 84 Co, 62 Fe, 34 Cr,
-7 Mn), anchor that direction. Deleting them drops the numerical rank at the same tolerance to 111 with condition
-number $3.6\times10^{8}$. The main-effect \emph{levels} therefore rest on a few hundred rows
+7 Mn), anchor that direction. Deleting them drops the numerical rank to 111 with condition
+number $1.8\times10^{9}$. The main-effect \emph{levels} therefore rest on a few hundred rows
 and are not physical contributions. What the table reports is unaffected, because a
 within-element contrast $(c_e + \gamma_{ea}) - (c_e + \gamma_{eb}) = \gamma_{ea} -
 \gamma_{eb}$ is invariant under that transformation; the driver asserts that all 75 such
 contrasts have inner product exactly zero with each of the five near-dependency
 directions and are invariant under column scaling and permutation to
-$6.5\times10^{-12}$ meV/atom.
+$1.6\times10^{-12}$ meV/atom.
 The spread intervals are cluster bootstraps over structural prototypes, 1{,}965
 replicates pooled over two seeds (965 at the first, 1{,}000 at the second; the driver
 reproduces both runs), each refitting all 113 columns. The test is the
@@ -1781,7 +1821,7 @@ and as its square on the standardised scale because coverage is not monotone in 
 energy. Weighted outcomes are computed on the 116{,}789 recomputed, PBE-stable entries.
 Over the 365{,}504 PBE-stable $\le$4-element summary entries the fitted propensity has
 median 0.2995 and minimum
-$7.1\times10^{-218}$, on entries that were not recomputed; among weighted entries the
+$e^{-500} \approx 7.1\times10^{-218}$, the underflow limit of the fit, on entries that were not recomputed; among weighted entries the
 minimum is $1.52\times10^{-6}$ and the median 0.3445, against 0.2752 for the
 unrecomputed. Weights are the inverse fitted probability floored at $10^{-2}$; untrimmed,
 the largest weight is $6.6\times10^{5}$ and the weighted rate reads 3.05\%, an artefact
@@ -1862,7 +1902,7 @@ doi:10.1103/PhysRevLett.121.207201; arXiv:1808.09261
 \bibitem[Furness et al.(2020)]{furness2020} J.~W. Furness, A.~D. Kaplan, J.~Ning,
 J.~P. Perdew and J.~Sun, ``Accurate and Numerically Efficient r$^2$SCAN Meta-Generalized
 Gradient Approximation,'' \emph{J.~Phys.~Chem.~Lett.} \textbf{11}, 8208--8215 (2020).
-doi:10.1021/acs.jpclett.0c02405; correction \emph{ibid.} \textbf{11}(21), 9248 (2020).
+doi:10.1021/acs.jpclett.0c02405; correction \emph{ibid.} \textbf{11}, 9248 (2020).
 doi:10.1021/acs.jpclett.0c03077
 
 \bibitem[GNoME dataset(2023)]{gnomedataset} Google DeepMind, ``GNoME dataset
@@ -1885,7 +1925,7 @@ Surface Dataset for Materials,'' arXiv:2503.04070 (2025).
 \bibitem[Kingsbury et al.(2022a)]{kingsbury2022prm} R.~Kingsbury, A.~S. Gupta,
 C.~J. Bartel, J.~M. Munro, S.~Dwaraknath, M.~Horton and K.~A. Persson, ``Performance
 comparison of r$^2$SCAN and SCAN metaGGA density functionals for solid materials via an
-automated, high-throughput computational workflow,'' \emph{Phys.~Rev.~Materials}
+automated, high-throughput computational workflow,'' \emph{Phys.~Rev.~Mater.}
 \textbf{6}, 013801 (2022a). doi:10.1103/PhysRevMaterials.6.013801
 
 \bibitem[Kingsbury et al.(2022b)]{kingsbury2022npj} R.~Kingsbury, A.~S. Rosen, A.~S. Gupta,
@@ -1926,14 +1966,10 @@ AI-Driven Materials Science: Tech Giants Introduce Groundbreaking Models,''
 arXiv:2402.05799 [commentary]
 
 \bibitem[Materials Project(2026a)]{mpanion} Materials Project documentation,
-``Anion and GGA/GGA+$U$ Mixing,'' \url{https://docs.materialsproject.org/
-methodology/materials-methodology/thermodynamic-stability/thermodynamic-stability/
-anion-and-gga-gga+u-mixing} (accessed 10 October 2026a).
+``Anion and GGA/GGA+$U$ Mixing,'' \url{https://docs.materialsproject.org/methodology/materials-methodology/thermodynamic-stability/thermodynamic-stability/anion-and-gga-gga+u-mixing} (accessed 10 October 2026).
 
 \bibitem[Materials Project(2026b)]{mpmixingdocs} Materials Project documentation,
-``GGA/GGA+U/r2SCAN mixing,'' \url{https://docs.materialsproject.org/methodology/
-materials-methodology/thermodynamic-stability/thermodynamic-stability/
-gga-gga+u-r2scan-mixing} (accessed 10 October 2026b).
+``GGA/GGA+U/r2SCAN mixing,'' \url{https://docs.materialsproject.org/methodology/materials-methodology/thermodynamic-stability/thermodynamic-stability/gga-gga+u-r2scan-mixing} (accessed 10 October 2026).
 
 \bibitem[Mej\'ia-Rodr\'iguez and Trickey(2019)]{mejia2019} D.~Mej\'ia-Rodr\'iguez and
 S.~B. Trickey, ``Analysis of over-magnetization of elemental transition metal solids from
@@ -1994,12 +2030,13 @@ quantifying uncertainty in DFT energy corrections,'' \emph{Sci.~Rep.} \textbf{11
 (2021). doi:10.1038/s41598-021-94550-5
 
 \bibitem[Warford et al.(2026)]{warford2026} T.~Warford, F.~L. Thiemann and
-G.~Cs\'anyi, ``Better without U: Impact of Selective Hubbard U Correction on
-Foundational MLIPs,'' arXiv:2601.21056 (28 January 2026).
+G.~Cs\'anyi, ``Better without U: impact of selective Hubbard U correction on
+foundational MLIPs,'' \emph{Mach.~Learn.: Sci.~Technol.} \textbf{7}, 035033 (2026).
+doi:10.1088/2632-2153/ae6be5; arXiv:2601.21056
 
 \bibitem[Yu et al.(2024)]{yu2024} H.~Yu, M.~Giantomassi, G.~Materzanini, J.~Wang and
 G.-M. Rignanese, ``Systematic assessment of various universal machine-learning interatomic
-potentials,'' \emph{Mater.~Genome Eng.~Adv.} \textbf{2}(3) (2024).
+potentials,'' \emph{Mater.~Genome Eng.~Adv.} \textbf{2}, e58 (2024).
 doi:10.1002/mgea.58; arXiv:2403.05729
 
 \bibitem[Zeni et al.(2025)]{zeni2025} C.~Zeni et al., ``A generative model for
