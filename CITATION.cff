@@ -1,13 +1,14 @@
 cff-version: 1.2.0
 title: >-
-  Chemistry-resolved disagreement between PBE and r2SCAN stability verdicts in the
-  GNoME materials database — analysis code and derived results
+  Chemistry-resolved disagreement between Materials Project-compatible PBE(+U) and
+  r2SCAN stability verdicts in the GNoME materials database — analysis code and derived results
 message: >-
   If you use this software or its derived results, please cite both the software (this
   file) and the preprint it accompanies.
 type: software
 authors:
   - given-names: Karthikeya
+    family-names: Aduru
     affiliation: Accretion Labs
     email: founder@accretionlabs.net
 repository-code: https://github.com/FOUNDERACCRETION/gnome-audit
