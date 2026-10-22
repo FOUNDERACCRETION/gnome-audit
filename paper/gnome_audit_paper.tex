@@ -9,7 +9,7 @@
 \graphicspath{{./}{../results/}}
 \hypersetup{colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue,
   pdftitle={Chemistry-resolved disagreement between Materials Project-compatible PBE(+U) and r2SCAN stability verdicts in the GNoME materials database},
-  pdfauthor={Karthikeya}}
+  pdfauthor={Karthikeya Aduru}}
 \setcounter{topnumber}{3}
 \setcounter{bottomnumber}{2}
 \setcounter{totalnumber}{4}
@@ -19,8 +19,8 @@
 \renewcommand{\floatpagefraction}{0.85}
 \title{\textbf{Chemistry-resolved disagreement between Materials Project-compatible
 PBE(+$U$) and r$^2$SCAN stability verdicts in the GNoME materials database}}
-\author{Karthikeya \\ \small Accretion Labs \\ \small \texttt{founder@accretionlabs.net}}
-\date{18 October 2026}
+\author{Karthikeya Aduru \\ \small Accretion Labs \\ \small \texttt{founder@accretionlabs.net}}
+\date{October 2026}
 
 \begin{document}
 \sloppy % the many long \texttt{} identifiers and URLs otherwise overfill lines
@@ -65,8 +65,8 @@ convex hull, the surface of lowest formation energy below which a composition ha
 cheaper decomposition into competing phases, for a total of 421{,}000
 stable crystals \citep{merchant2023}; subsequent releases, which widened the
 release criterion from the documented on-hull tolerance of $5\times10^{-5}$ eV/atom to
-within 1 meV/atom of the hull, brought the public dataset to 554{,}054 entries
-\citep{gnomedataset}. Generative models such as MatterGen
+within 1 meV/atom of the hull \citep{gnomedataset}, brought the public summary file to
+554{,}054 entries (our row count). Generative models such as MatterGen
 \citep{zeni2025} and expanded databases such as Alexandria have followed, the latter's
 PBEsol/SCAN subset \citep{schmidt2022} using PBEsol geometries with SCAN energies
 rather than PBE. GNoME's own stability verdicts, which are
@@ -157,7 +157,7 @@ place PBE(+$U$) and r$^2$SCAN energies on a single phase diagram \citep{kingsbur
 Two results bear directly on what follows. Kothakonda et al.\ tested r$^2$SCAN
 thermochemistry on more than 1{,}000 solids and concluded that for transition metals,
 intermetallics and weakly bound solids, GGAs are comparable to meta-GGAs, and that for
-the reaction class they label Type 2 decomposition enthalpies PBE is slightly more accurate \citep{kothakonda2023}.
+the reaction class they label Type 2 decomposition enthalpies, PBE is slightly more accurate \citep{kothakonda2023}.
 Bartel et al.\ reached a compatible verdict from the reaction side: across 646
 decomposition reactions that are not simply formation reactions, PBE (mean absolute error 70 meV/atom) and
 SCAN (59 meV/atom) perform similarly \citep{bartel2019}. Both are statements about error
@@ -174,7 +174,7 @@ polymorphs classified as unstable may be stable once that uncertainty is propaga
 potential-energy surfaces within one dataset \citep{warford2026}; Section~\ref{sec:u}
 examines the association across that boundary. Sun et al.\ data-mined 29{,}902 observed
 phases to produce a chemistry-resolved scale of metastability \citep{sun2016}, and Yu et
-al.\ map universal machine-learned interatomic potential (MLIP) formation-energy error per element across 19{,}998 unary and
+al.\ mapped universal machine-learned interatomic potential (MLIP) formation-energy error per element across 19{,}998 unary and
 binary phases \citep{yu2024}; both stratify a computed-energy error by chemistry, and
 neither addresses functional-level verdict flips in a generated candidate database.
 Cheetham and Seshadri question how many GNoME entries are simultaneously novel,
@@ -218,10 +218,9 @@ censored to survivors.
 Each file reports decomposition energy against several reference sets, which the release
 documents as distances to four convex hulls: \emph{MP}, the hull of all Materials Project
 entries; \emph{MP OQMD} (written MP+OQMD below), Materials Project plus OQMD entries;
-\emph{All}, the hull of all entries, which the documentation says requires Materials
-Project, OQMD and WBM (Wang--Botti--Marques dataset) energies and which we read as also
-including GNoME's other
-structures; and \emph{Relative}, the hull of all entries except the current one \citep{gnomedataset}.
+\emph{All}, the hull of all entries (the documentation's convex-hull section says that
+hull is built from Materials Project, OQMD and WBM (Wang--Botti--Marques dataset) energies),
+which we read as also including GNoME's other structures; and \emph{Relative}, the hull of all entries except the current one \citep{gnomedataset}.
 That documentation is written for the summary file; we take the documented meanings as
 applying to the recomputation file's identically named columns. The released
 All-referenced r$^2$SCAN energies are positive for 25.8\% of entries
@@ -655,7 +654,7 @@ to PBE across V, Co, Ni and Pd, and in Fe$_3$C obtain 6.87 $\mu_B$ per three-iro
 unit under SCAN against 5.75 under PBE and a room-temperature saturation value of 5.3, an
 excess of about 30\% over experiment. \citet{mejia2019} trace the elemental
 over-magnetisation, about 20\% in bcc Fe, to the iso-orbital indicator;
-\citet{tran2020} find it in intermetallic ferromagnets generally; and
+\citet{tran2020} find it in the intermetallic ferromagnets they test; and
 \citet{kothakonda2023} find it stronger under r$^2$SCAN than under SCAN, with iron's
 moment overestimated by 24\% against SCAN's 17\%. A functional that
 over-stabilises the magnetic state displaces a metallic compound and its competing
@@ -1088,7 +1087,7 @@ nonparametrically in Section~\ref{sec:ln}. Element count enters negatively --- e
 standard deviation reduces the odds by about 16\% --- consistent with the marginal rates
 (binaries 19.8\%, ternaries 14.6\%, quaternaries 12.7\%).
 
-Three cautions. McFadden's pseudo-$R^2$ is 0.066, low on its own scale: what supports
+Three cautions. The McFadden pseudo-$R^2$ is 0.066, low on its own scale: what supports
 using composition for allocation is the held-out ranking performance of
 Section~\ref{sec:budget}, not this number, and readers should not use this table to
 decide whether a specific compound's label is wrong. Correcting for clustering inflates
@@ -1218,7 +1217,7 @@ all-entries reference,
 so part of its $-7.7$-point advantage there may be incompleteness on the GNoME side.
 The comparison is also not matched on distance below the PBE hull, the single covariate
 most likely to confound it; the Materials Project thermo documents expose
-\texttt{decomposition\_enthalpy} \citep{bartel2019}, so the omission is ours; we leave it to a
+\texttt{decomposition\_enthalpy}, the quantity defined by \citet{bartel2019}, so the omission is ours; we leave it to a
 follow-up rather than add an unregistered analysis at this stage. The defensible claim is therefore:
 \emph{within the analysed datasets, functional-level disagreement differs between GNoME
 and previously catalogued materials in a chemistry-dependent manner, and the direction
@@ -1323,8 +1322,8 @@ MP+OQMD hulls; across the 40 primary cells the MP+OQMD rate runs 1.1 to 5.1 poin
 780 pairwise orderings invert, all between cells whose intervals overlap). The ``All'' reference set behaves differently
 and is treated in Section~\ref{sec:allref}.
 
-\paragraph{Pseudopotentials.} GNoME used newer PAW potentials for Li, Na, Mg, Ge and Ga,
-and its MP-referenced hull applies per-atom corrections to Materials Project entries
+\paragraph{Pseudopotentials.} GNoME used newer PAW potentials for Li, Na, Mg, Ge and Ga
+\citep{merchant2023}, and its MP-referenced hull applies per-atom corrections to Materials Project entries
 containing those elements \citep{gnomedataset}. Materials containing them flip
 \emph{less} (11.0\% against 13.5\%). That is a
 marginal association over compositions differing in much more than the potential used,
@@ -1464,7 +1463,7 @@ coverages pool all element counts, so part of the gradient is the element-count 
 just described; the propensity model of Section~\ref{sec:ipw} enters both. Either way,
 the recomputed subset under-samples precisely the region where flips are most likely.
 Taken alone that would make the observed rate an underestimate of the population rate,
-but that model includes PBE decomposition energy alongside
+but the propensity model includes PBE decomposition energy alongside
 composition and cell size, and the net effect of weighting is to move the estimate
 \emph{down}, from 13.36\% to 12.71\%. We did not decompose that net change into
 per-feature contributions, and we claim no direction for the overall selection bias.
@@ -1477,7 +1476,7 @@ do not identify a useful population rate, as any worst-case bound on 68\% censor
 cannot. The 12.7\% propensity-weighted result is reported separately as a
 model-dependent sensitivity analysis, not as a replacement for those bounds.
 
-\paragraph{Unmatched identifiers.} 22{,}498 r$^2$SCAN material IDs do not appear in the
+\paragraph{Unmatched identifiers.} A total of 22{,}498 r$^2$SCAN material IDs do not appear in the
 current summary file. Their distribution over anion class and element count is close to
 that of the matched remainder, and their flip rate is 2.0 points lower (11.4\% against
 13.4\%), which does not suggest selective omission of high-disagreement entries. One
@@ -1559,7 +1558,7 @@ would be better. The headline result is unchanged under a coarser definition and
 removal of the largest clusters (Section~\ref{sec:cluster}), and we claim no direction
 for the residual error.
 
-\paragraph{The model supports ranking, not per-material prediction.} McFadden's
+\paragraph{The model supports ranking, not per-material prediction.} The McFadden
 pseudo-$R^2$ is 0.066, and the held-out evaluation of Section~\ref{sec:budget} supports
 the model's ability to \emph{rank} materials rather than to assign calibrated per-entry
 probabilities. We have not assessed calibration.
@@ -1633,8 +1632,8 @@ of opposite sign cancel.
 For verification budgets, composition supplements proximity to the hull rather than
 replacing it. In cluster-held-out evaluation at a 20\% entry-count budget, ranking by
 PBE hull distance alone surfaces 40.4\% of disagreements and the combined policy
-45.8\%, against 37.6\% for composition alone; the combined policy stays ahead by about
-six points of a twenty-bin nonparametric model of hull distance, and cross-fitting the
+45.8\%, against 37.6\% for composition alone; the combined policy stays about six points
+ahead of a twenty-bin nonparametric model of hull distance, and cross-fitting the
 estimated cell rates does not remove the gain. That is a held-out ranking result and not
 a claim about calibrated per-entry risk.
 
@@ -1691,7 +1690,7 @@ than against the citation alone: Merchant et al.'s 84\%, 86.8\% and 90\% figures
 substitution \citep{merchant2023}; the Materials Project correction scheme's fourteen
 corrected anion species and its restriction of the Hubbard $U$ to eight transition metals
 in oxides and fluorides \citep{mpanion}; the 6{,}307 materials behind Kingsbury et al.'s ``approximately 6000
-solids'' and their conclusion that r$^2$SCAN predicts formation energies more accurately
+solid materials'' and their conclusion that r$^2$SCAN predicts formation energies more accurately
 than both SCAN and PBEsol \citep{kingsbury2022prm}; Kothakonda et al.'s conclusion that
 GGAs are comparable to meta-GGAs for transition metals, intermetallics and weakly bound
 solids, and that PBE is slightly more accurate for the 233 Type 2 decomposition enthalpies
@@ -1700,9 +1699,8 @@ than r$^2$SCAN for their refinement, and the exclusion of 142 rare-earth compoun
 reasons of $f$-electron and pseudopotential uncertainty \citep{an2026}; Yu et al.'s 19{,}998
 unary and binary materials and their per-element formation-energy error metric
 \citep{yu2024}; and Huang et al.'s 380{,}190 paired MatPES entries together with their
-thermodynamic validation on six binary systems, Fe--O, Mn--O, Ti--Cl, Mo--Cl, V--S and
-Cu--S \citep{huang2026}. The ``more than 60\% metallic'' figure of Liu and Meng
-\citep{liu2024} is cited as reported and is not used in any analysis; the anion-class mix
+thermodynamic validation on six binary systems, among them Fe--O, Mn--O, Ti--Cl, Mo--Cl
+and V--S \citep{huang2026}. The ``over 60\%'' metallic figure of \citet{liu2024} is cited as reported and is not used in any analysis; the anion-class mix
 is measured directly in this paper (Table~\ref{tab:allref}). The remaining references were
 verified for existence, authorship and venue but not claim by claim.
 
@@ -1770,13 +1768,13 @@ $n_{\text{el}}$ & Anion & Ln & 3$d$ & $n$ & Rate & Cluster 95\% CI & Widen \\
 \end{longtable}
 \normalsize
 
-Median widening factor 1.82. The highest and lowest quaternary cells remain disjoint:
+The median widening factor is 1.82. The highest and lowest quaternary cells remain disjoint:
 30.7\% [27.7, 33.8] against 4.0\% [3.3, 4.7].
 
 \section{Per-element results}\label{app:element}
 
 This appendix lists all 83 elements appearing in at least 300 recomputed materials,
-ordered by flip rate and read left to right across the three column groups. Point estimates; cluster bootstrap
+ordered by flip rate and read left to right across the three column groups. Entries are point estimates; cluster bootstrap
 intervals for the extremes are given in Section~\ref{sec:element}. An asterisk marks the
 53 elements whose contrast against the global rate survives Benjamini--Hochberg
 correction at 0.05. Each element is contrasted against a global rate that includes that
@@ -1838,7 +1836,7 @@ Each replicate draws $G$ clusters with replacement from the $G$ clusters present
 relevant subset and concatenates their members, so replicate sample size varies.
 Intervals are percentile intervals at 2.5 and 97.5. Cell intervals and the per-element
 analysis use 20{,}000 replicates; the within-anion excesses 100{,}000; the matched-cell
-comparison of Section~\ref{sec:known} 20{,}000; the coarser-clustering check 20{,}000;
+comparison of Section~\ref{sec:known}, 20{,}000; the coarser-clustering check, 20{,}000;
 and the average marginal effects 1{,}000 refits, since each replicate there refits the
 interaction model. The primary seed is \texttt{numpy.random.default\_rng(20261009)}; the average
 marginal effects and the matched known-materials comparisons use 20261011, the context-spread intervals pool 20261009 and 20261012,
@@ -1866,10 +1864,11 @@ intervals of Table~\ref{tab:context}). On the lower endpoint of the Fe oxide exc
 (\texttt{phase33\_percentile\_conv.py}); at 100{,}000 its upper endpoint moves 0.042 points across seeds. At 20{,}000 replicates the Benjamini--Hochberg
 set is the same 53 of 83 elements under all five seeds (at 300 replicates the count ranges from 51
 to 53), and the
-headline endpoints [27.7, 33.8] and [3.3, 4.7] come from 100{,}000 replicates at one
+headline endpoints [27.7, 33.8] and [3.3, 4.7] come from 20{,}000 replicates at one
 seed; at 600 replicates they move by up to 0.5 points across five seeds
 (\texttt{phase31\_stability.py}), and the $B^{-1/2}$ scaling observed for the Fe oxide
-endpoint implies movement of order 0.04 points at 100{,}000. The
+endpoint implies movement of order 0.1 points at 20{,}000, so the last printed digit of
+those endpoints carries that uncertainty. The
 average marginal effects are one exception, at 1{,}000 refits: the $U$-list endpoints
 move 0.03 and 0.05 points across two seeds, while the pooled lanthanide effect's upper
 endpoint moves 0.10 and should be read as $+1.1$ to $+1.2$. The spread intervals of
@@ -1949,7 +1948,7 @@ to small-cell estimates. The combined policy's cell rate is a generated regresso
 \texttt{phase24\_budget\_strong.py} tests that on 20 fresh splits by cross-fitting the
 cell rates, dividing the estimation half into five folds by prototype cluster, and the
 held-out margin over a twenty-bin nonparametric hull-distance model is $+6.31$ points
-cross-fitted against $+6.00$ not. The uniform-random row is the analytic expectation
+cross-fitted against $+6.00$ without cross-fitting. The uniform-random row is the analytic expectation
 $\lfloor bN \rfloor / N$, not a simulation; per-split values are written to
 \texttt{results/budget\_repeated.csv}.
 
@@ -2115,7 +2114,7 @@ Gradient Approximation,'' \emph{J.~Phys.~Chem.~Lett.} \textbf{11}, 8208--8215 (2
 doi:10.1021/acs.jpclett.0c02405; correction \emph{ibid.} \textbf{11}, 9248 (2020).
 doi:10.1021/acs.jpclett.0c03077
 
-\bibitem[GNoME dataset(2023)]{gnomedataset} Google DeepMind, ``GNoME dataset
+\bibitem[Google DeepMind(2023)]{gnomedataset} Google DeepMind, ``GNoME dataset
 documentation'' (2023), \texttt{DATASET.md} and \texttt{README.md}, \url{https://github.com/google-deepmind/materials_discovery},
 accessed 11 October 2026. Data released under CC BY-NC 4.0.
 
@@ -2157,7 +2156,7 @@ doi:10.1021/acsmaterialsau.2c00059
 
 \bibitem[Kresse and Furthm\"uller(1996)]{vasp1996} G.~Kresse and J.~Furthm\"uller,
 ``Efficient iterative schemes for ab initio total-energy calculations using a plane-wave
-basis set,'' \emph{Phys.~Rev.~B} \textbf{54}, 11169 (1996).
+basis set,'' \emph{Phys.~Rev.~B} \textbf{54}, 11169--11186 (1996).
 doi:10.1103/PhysRevB.54.11169
 
 \bibitem[Kuner et al.(2025)]{kuner2025} M.~C. Kuner, A.~D. Kaplan, K.~A. Persson, M.~Asta
@@ -2175,10 +2174,10 @@ AI-Driven Materials Science: Tech Giants Introduce Groundbreaking Models,''
 \emph{Mater.~Futures} \textbf{3}, 027501 (2024). doi:10.1088/2752-5724/ad2e0c;
 arXiv:2402.05799 [commentary]
 
-\bibitem[Materials Project(2026a)]{mpanion} Materials Project documentation,
+\bibitem[Materials Project(2026a)]{mpanion} Materials Project documentation (2026a),
 ``Anion and GGA/GGA+$U$ Mixing,'' \url{https://docs.materialsproject.org/methodology/materials-methodology/thermodynamic-stability/thermodynamic-stability/anion-and-gga-gga+u-mixing} (accessed 10 October 2026).
 
-\bibitem[Materials Project(2026b)]{mpmixingdocs} Materials Project documentation,
+\bibitem[Materials Project(2026b)]{mpmixingdocs} Materials Project documentation (2026b),
 ``GGA/GGA+U/r2SCAN mixing,'' \url{https://docs.materialsproject.org/methodology/materials-methodology/thermodynamic-stability/thermodynamic-stability/gga-gga+u-r2scan-mixing} (accessed 10 October 2026).
 
 \bibitem[Mej\'ia-Rodr\'iguez and Trickey(2019)]{mejia2019} D.~Mej\'ia-Rodr\'iguez and
@@ -2192,7 +2191,7 @@ M.~Aykol, G.~Cheon and E.~D. Cubuk, ``Scaling deep learning for materials discov
 
 \bibitem[Perdew et al.(1996)]{pbe1996} J.~P. Perdew, K.~Burke and M.~Ernzerhof,
 ``Generalized Gradient Approximation Made Simple,'' \emph{Phys.~Rev.~Lett.} \textbf{77},
-3865 (1996). doi:10.1103/PhysRevLett.77.3865; erratum \emph{ibid.} \textbf{78}, 1396
+3865--3868 (1996). doi:10.1103/PhysRevLett.77.3865; erratum \emph{ibid.} \textbf{78}, 1396
 (1997). doi:10.1103/PhysRevLett.78.1396
 
 \bibitem[Reents et al.(2026)]{reents2026} T.~Reents, M.~Bercx and G.~Pizzi, ``Correcting DFT

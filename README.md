@@ -80,7 +80,7 @@ data/                 NOT in the repository; the two GNoME CSVs, see REPRODUCE.m
 | `phase31b_fe_stability.py` | App. C | Seed stability of the Fe-in-oxides excess interval | `fe_oxide_seed_stability.csv` |
 | `phase32_bh_identity.py` | §4.2, App. C | Which elements cross the BH threshold under five seeds at 20,000 replicates | `stability_checks.csv` |
 | `phase33_percentile_conv.py` | App. C | Convergence of the percentile estimator with replicate count (400 → 100,000) | `percentile_convergence.csv` |
-| `phase34_converged_intervals.py` | §4.1, 4.2, App. A, B | Every cell and per-element interval at the converged count (100,000 / 20,000) | `cell_ci_converged.csv`, `per_element_clustered.csv`, `cluster_bootstrap.csv`, `appendixA.tex` |
+| `phase34_converged_intervals.py` | §4.1, 4.2, App. A, B | Every cell and per-element interval at the converged count (20,000) | `cell_ci_converged.csv`, `per_element_clustered.csv`, `cluster_bootstrap.csv`, `appendixA.tex` |
 | `phase35_coarse_cluster.py` | §3.5 | Coarser clustering (stoichiometry only) at the converged count | `phase35_coarse_cluster.log` |
 | `q2_known_baseline.py` | §4.11 | **Needs MP API key.** Pulls Materials Project materials with GGA/GGA+U and r²SCAN thermo records | `known_baseline.csv` |
 | `q2b_completeness.py` | §4.11, 4.14 | **Needs MP API key.** MP-side r²SCAN hull completeness by anion class | `mp_completeness.csv`, `mp_gga_raw.csv`, `mp_r2scan_raw.csv` |
