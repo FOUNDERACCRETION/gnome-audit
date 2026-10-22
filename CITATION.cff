@@ -1,0 +1,30 @@
+cff-version: 1.2.0
+title: >-
+  Chemistry-resolved disagreement between PBE and r2SCAN stability verdicts in the
+  GNoME materials database — analysis code and derived results
+message: >-
+  If you use this software or its derived results, please cite both the software (this
+  file) and the preprint it accompanies.
+type: software
+authors:
+  - given-names: Karthikeya
+    affiliation: Accretion Labs
+    email: founder@accretionlabs.net
+repository-code: https://github.com/FOUNDERACCRETION/gnome-audit
+license: MIT
+keywords:
+  - density functional theory
+  - r2SCAN
+  - meta-GGA
+  - thermodynamic stability
+  - convex hull
+  - materials discovery
+  - GNoME
+  - reproducibility
+abstract: >-
+  Analysis code, pre-registered decision rules and derived results for a chemistry-resolved
+  audit of disagreement between PBE(+U) and r2SCAN stability verdicts on the 139,541 GNoME
+  materials released with r2SCAN recalculations. Includes cluster-bootstrap and
+  cluster-robust uncertainty over structural-prototype clusters, a propensity model for
+  recomputation selection, and a held-out verification-budget evaluation. Reproduces from
+  two public CSV files; two phases additionally require a free Materials Project API key.

@@ -1,0 +1,299 @@
+\documentclass[11pt]{article}
+\usepackage[margin=0.9in]{geometry}
+\usepackage{booktabs,longtable,amsmath,amssymb,hyperref}
+\usepackage[T1]{fontenc}
+\hypersetup{colorlinks=true,linkcolor=blue,urlcolor=blue}
+\title{\textbf{Disposition of the Consolidated Manuscript Error\\and Revision Register}}
+\author{Karthikeya \\ \small Accretion Labs \\ \small \texttt{founder@accretionlabs.net}}
+\date{11 October 2026}
+\begin{document}
+\maketitle
+
+\section*{What this document is}
+
+The register of 11 October 2026 lists 52 items. This document records the disposition of
+each, and sets out the reasoning for every item that was \emph{not} applied as written. It
+covers Draft~17 of \emph{Chemistry-resolved disagreement between PBE and r$^2$SCAN
+stability verdicts in an AI-generated materials database}.
+
+Of the 52 items, 45 are applied in full, 6 are applied in part, and 1 cannot be done by the
+author alone. Nothing is declined on the ground that the register is wrong about the facts.
+Where an item is not applied as written, it is for one of three reasons: the register itself
+offered an alternative and the alternative was taken; the work the item asks for would churn
+every table in the paper to change a number in the fourth significant figure; or the item
+asks for something only a second person can supply.
+
+Six items were resolved by measurement rather than by rewording, and in two cases the
+measurement contradicted what the paper previously said. Those are listed in
+Section~\ref{sec:measured} because they are the places where the register changed a result
+and not only a sentence.
+
+\section{Items not applied as written}
+
+\subsection*{Item 01 --- the register's second option was taken, not its first}
+
+The register offers two routes. The first regenerates every full-release analytical output
+at $n = 139{,}516$; the second withdraws the universal-exclusion claim and labels the
+retained outcomes correctly.
+
+Route two was taken, and the reason is arithmetic. The 25 matched entries that were not
+PBE-stable were counted: 24 of them fall inside a primary composition cell. Excluding them
+moves the release-based rate from 13.0413\% to 13.0401\% and the primary-cell rate from
+12.9150\% to 12.9136\%. Regenerating 40 cell rates, 83 element rates, every cluster
+bootstrap interval, the regression, the band-gap table and the budget evaluation to move the
+third decimal place of two percentages would create a large diff with no substantive change,
+and would break the correspondence between the paper's $n$ and the released file that
+readers will download.
+
+Instead Section~3.4 now defines two outcomes separately --- \emph{release-based
+disagreement}, which makes no use of the PBE verdict and is defined for all 139{,}541
+entries, and a \emph{confirmed transition}, which requires an observed non-positive PBE
+decomposition energy and is defined for the 117{,}018 matched PBE-stable entries. The 25 are
+excluded wherever a confirmed transition is the outcome or an observed PBE energy is
+required (the budget evaluation, the propensity-weighted rates, the energy-displacement
+analysis, the matched comparison) and retained in the release-based rates and the cell
+tabulations. Both rates are printed, with and without them. The universal-exclusion claim is
+gone. The population-flow table now marks which rows are raw release counts and which are
+analytical, and \texttt{run\_all.py} checks the 25 and the 24 as headline quantities so the
+distinction cannot silently rot.
+
+\subsection*{Item 10 --- seed stability was demonstrated instead of raising the replicate count}
+
+The register permits either. Raising 300--600 replicates to, say, 5{,}000 would multiply the
+runtime of the whole bootstrap stack, and would not answer the question the item actually
+raises, which is whether the \emph{thresholded count} of significant contrasts is stable. So
+the count was recomputed under five seeds: 53, 53, 52, 53, 53. That is reported in
+Appendix~C and checked in CI as two headline quantities (minimum 52, maximum 53). If the
+range had been wider the replicate count would have had to go up; it is not.
+
+\subsection*{Item 11 --- the reduced-stoichiometry sensitivity check was not run}
+
+The register marks it optional. The limitation is now stated explicitly in the paper:
+compositions are used exactly as released and are not reduced, so the clustering key depends
+on the released unit-cell convention as well as on the underlying stoichiometry, and the
+same compound released as A$_2$B$_4$ and as AB$_2$ would receive different anonymised
+patterns. The space-group source is named and the absence of missing values recorded.
+
+Running the check would mean re-deriving all 8{,}429 cluster keys and re-running every
+cluster bootstrap, cluster-robust regression and cluster-wise budget split on the new keys.
+That is a day of compute and a second set of every interval in the paper, to test a proxy
+that the paper already declines to claim a direction for. It is recorded as the obvious next
+robustness check rather than done.
+
+\subsection*{Item 47 --- independent review of the core definitions and scripts is not something I can supply}
+
+Everything mechanical in this item is done: the pipeline was regenerated on final inputs,
+script-to-output mappings were checked, the CI checks were extended from 23 headline
+quantities to 38 (including the updated Benjamini--Hochberg count, the analytical population
+counts and the new budget contrasts), the environment is pinned, and SHA-256 checksums of
+both input files are now printed in Appendix~F.
+
+The last clause --- \emph{obtain independent review of core definitions and scripts} ---
+cannot be satisfied from inside the project. The Data and code availability section now says
+so in as many words: the core definitions and scripts have not been reviewed by anyone other
+than the author. This is the one item on the register that is open, and it is the one the
+accompanying strategic note is right to call the highest-value remaining step.
+
+\subsection*{Item 51 --- the citation ledger is partial, and the disclosure now says exactly how partial}
+
+Six sources were checked against their source text rather than against the citation, and the
+checks are recorded in the Disclosures section: Kingsbury et al.\ (6{,}307 materials behind
+``approximately 6000 solids''; r$^2$SCAN more accurate than both SCAN and PBEsol for
+formation energies); Kothakonda et al.\ (GGAs comparable for transition metals,
+intermetallics and weakly bound solids; PBE slightly more accurate for the 233 Type~2
+decomposition enthalpies); An et al.\ (603 to 298, 166 dynamically stable, 109 surviving,
+SCAN and not r$^2$SCAN, and the exclusion of 142 rare-earth compounds for $f$-electron and
+pseudopotential reasons); Yu et al.\ (19{,}998 unary and binary materials, per-element
+formation-energy error); Huang et al.\ (380{,}190 paired MatPES entries, and thermodynamic
+validation on exactly six binary systems: Fe--O, Mn--O, Ti--Cl, Mo--Cl, V--S, Cu--S); and
+Liu and Meng, whose ``more than 60\% metallic'' figure is now cited as reported and used in
+no analysis.
+
+The remaining references were verified for existence, authorship and venue but not claim by
+claim, and updated publication metadata was not re-checked for all of them. The paper does
+not claim otherwise. Completing the ledger is a reading task on roughly 25 papers; it is
+listed in Section~\ref{sec:yours}.
+
+\subsection*{Item 52 --- the abstract was shortened; the supplement migration and the contents page were not done}
+
+The abstract now fits on one page. Repeated defensive phrasing was cut in several places,
+and the rhetorical formulations the register names (``not additive bookkeeping'', ``does not
+generate'', ``strongest predictor in every specification'') are gone from the abstract,
+results and conclusion.
+
+Two sub-requests were not acted on. The design-effect arithmetic stays in the main text,
+because the whole inferential apparatus of the paper rests on the claim that these
+observations are not independent, and a reader who cannot follow that arithmetic in place
+has no reason to accept any interval in the paper. The table of contents stays, because the
+paper now carries eight appendices and a reader looking for the input manifest or the
+all-cells table needs a way to find them.
+
+The paper is also longer than the 39 pages the register saw, not shorter: it is 46. The
+additions are the weight diagnostics the register demands in item 32, the all-cells
+supplement it demands in item 38, the input manifest it demands in item 06, the model
+specification it demands in item 16, and the stronger budget comparison. Those cost about
+six pages between them. Length was traded for the evidence the register asked for; the
+trade seems like the right one, but it is a trade and not a clean win.
+
+\section{Items the register asked for that only you can do}\label{sec:yours}
+
+None of these is a judgement call. They need an account, a person, or an email that is not
+mine to send.
+
+\begin{enumerate}
+\item \textbf{Independent computational review} (item 47, and \S2 of the strategic note).
+Give a reviewer the repository, the checksums, the pinned environment and the README, and
+ask for two separate things: whether the central tables regenerate on a clean machine, and
+whether the eligibility definitions, group encodings, bootstrap contrasts and budget splits
+are \emph{correct}. The second is not the same as the first and is the one that matters.
+\item \textbf{Ask the GNoME authors what the ``All'' column is} (item 41, \S3 of the
+strategic note). The paper's reading of it is marked as an inference throughout and every
+conclusion depending on it is flagged conditional, which is the best that can be done
+without an answer. One email settles it.
+\item \textbf{Deposit the repository in a DOI-minting archive} (Zenodo or similar) and cite
+the DOI. The paper currently says the deposit has not been made.
+\item \textbf{Complete the citation ledger} (item 51) on the roughly 25 references not yet
+checked claim by claim.
+\item \textbf{Regenerate the Materials Project API key.} It was partly visible in a
+screenshot during this work.
+\item \textbf{Make the repository public} before submission. The paper gives its URL.
+\end{enumerate}
+
+\section{Where the register changed a result, not a sentence}\label{sec:measured}
+
+Six items were answered by running something. Two of them contradicted the paper.
+
+\paragraph{Item 18 falsified a caption.} The caption of the logistic-regression table
+claimed that dropping hydrides ``moves no coefficient in the third decimal''. Measured, it
+moves the $U$-list odds ratio from 3.448 to 3.468 --- the third decimal of the largest term
+in the table. The caption now prints all three measured shifts. The claim was wrong and had
+never been computed.
+
+\paragraph{Item 32 found that a trimming choice was load-bearing and undocumented.} Appendix
+C said the inverse-probability weights were ``untrimmed''. The code floors the fitted
+propensity at $10^{-2}$. That is not a cosmetic difference: 26 eligible recomputed entries
+fall below the floor, and leaving them untrimmed drives the largest weight to
+$6.6\times10^{5}$, collapses Kish's effective sample size from 83{,}875 to 5, and moves the
+weighted rate from 12.71\% to 3.05\%. The reported 12.7\% is conditional on trimming, and
+the paper now says so, reports the full diagnostics (propensity quantiles, overlap between
+recomputed and unrecomputed, maximum weight, effective sample size, share of weight in the
+heaviest 1\%) and shows the estimate is stable at 12.71\%, 12.74\% and 12.76\% for floors of
+$10^{-2}$, $2\times10^{-2}$ and $5\times10^{-2}$.
+
+\paragraph{Item 37 replaced a hand-wave with a standardisation.} The aggregate inversion was
+previously explained by a commentary's ``more than 60\% metallic'' figure. The anion-class
+mix is now measured directly: the release is 38.9\% intermetallic and 9.8\% oxide. Over the
+twenty matched cells, standardising both sides to the known-materials cell mix, GNoME
+disagrees \emph{more} by $+1.2$ points $[+0.5, +1.9]$; at the GNoME mix, by $+1.8$. The
+direction of the aggregate comparison therefore reverses once the mix is held common, which
+identifies composition as a sufficient explanation of the inversion over those cells.
+
+\paragraph{Item 40 was answered by deletion, with evidence.} The claim that known-materials
+cells concentrate within 20 meV/atom of the hull is gone. The Materials Project
+\texttt{energy\_above\_hull} field is floored at zero and reads zero for 21.8\% of the
+152{,}426 entries pulled, so those margins are not recoverable from it. The paper now says
+that, and keeps the GNoME-side near-hull gradient as an internal descriptive result only.
+
+\paragraph{Item 43 corrected a cluster count.} The main text said half of 8{,}429 clusters.
+The code applies eligibility first; the eligible pool is 7{,}822 clusters and 3{,}911 are
+drawn per split. Both numbers are now in the main text and both are checked in CI.
+
+\paragraph{Item 44 was tested rather than hedged.} The register asked for the upper-estimate
+language to be removed because the direction of generated-regressor bias is not established.
+It is now removed, and the question was also settled empirically. On 20 fresh cluster-wise
+splits, a hull-distance model with twenty quantile-bin dummies gains nothing over simple
+closest-first ranking ($-0.06$ points at a 20\% budget, ahead in 3 splits of 20); the
+combined policy beats that flexible model by $+6.00$ points (20 of 20); and cross-fitting
+the cell rates leaves the margin at $+6.31$ points (20 of 20). Composition still adds after
+hull distance is modelled nonparametrically, and the gain is not generated-regressor
+optimism.
+
+\section{Verification state of Draft 17}
+
+Two layers, both green:
+
+\begin{itemize}
+\item \texttt{run\_all.py} regenerates the results directory from the two input CSVs and
+checks 38 headline quantities, up from 23. Four are claim-level rather than value-level: the
+budget ordering holds at every budget; the combined policy's margin over the flexible hull
+model stays positive under cross-fitting; the iron excess is smallest in oxides of all anion
+classes; composition adds after hull distance is modelled nonparametrically.
+\item \texttt{scripts/check\_paper.py} parses every number out of the \LaTeX{} tables and
+diffs 232 printed values against the result files.
+\end{itemize}
+
+Six new analysis scripts (\texttt{phase23} through \texttt{phase28}) are wired into the
+driver and the continuous-integration workflow, so the register's diagnostics are regenerated
+on every push rather than recorded once. The workflow deletes the stored results first,
+exempting only the two cached Materials Project pulls, which require a credential.
+
+The document compiles with no errors, no overfull or underfull boxes and no undefined
+references, at 46 pages.
+
+\section{Full disposition}
+
+\begin{longtable}{rp{0.56\textwidth}l}
+\toprule
+Item & Register heading & Disposition \\
+\midrule
+\endfirsthead
+\toprule
+Item & Register heading & Disposition \\
+\midrule
+\endhead
+01 & Population accounting consistency & Applied, second option \\
+02 & Unmatched entries not bounded by 25 & Applied \\
+03 & Release-based vs confirmed transitions & Applied \\
+04 & Gap and cell counts under exclusion & Applied, verified \\
+05 & Eligible sample for the IPW rate & Applied, verified \\
+06 & Input manifest & Applied, with checksums \\
+07 & Sandwich notation & Applied \\
+08 & Joint bootstrap, 51 to 53 & Applied, verified \\
+09 & Cluster pool per analysis & Applied \\
+10 & Replicate or seed stability & Applied, seed stability \\
+11 & Unreduced compositions & Applied; check not run \\
+12 & Extremum selection is descriptive & Applied \\
+13 & Exact boolean group definitions & Applied \\
+14 & Pseudo-$R^2$ is not variance explained & Applied \\
+15 & Marginal effects: definition and uncertainty & Applied, intervals computed \\
+16 & Atomic-fraction interaction model & Applied \\
+17 & Additivity constrains, does not require & Applied, heading changed \\
+18 & Hydride caption precision claim & Applied, measured \\
+19 & $U$ is not a sufficient explanation & Applied \\
+20 & Causal verbs & Applied \\
+21 & $U$ exclusivity claim & Applied \\
+22 & Open-shell wording and copper & Applied \\
+23 & Reference convention vs gauge shift & Applied \\
+24 & Mean and dispersion both differ & Applied \\
+25 & Frozen-$4f$ as a conditional concern & Applied \\
+26 & Accuracy does not propagate into disagreement & Applied \\
+27 & Shared selection remains unresolved & Applied \\
+28 & Winner's curse is a mechanism, not a fact & Applied \\
+29 & No mediation or independence claims & Applied \\
+30 & Exact-zero gap provenance & Applied, verified at source \\
+31 & IPW is a sensitivity check & Applied \\
+32 & Weight and positivity diagnostics & Applied, measured \\
+33 & Crystal-system adjustment claim & Applied \\
+34 & Pseudopotential exclusion claim & Applied \\
+35 & Per-feature attribution of weighting & Applied \\
+36 & Entry coverage is a proxy & Applied \\
+37 & Class proportions and standardisation & Applied, measured \\
+38 & All matched cells in a supplement & Applied, new appendix \\
+39 & One-sided bound needs its condition & Applied \\
+40 & Known-material margins within 20 meV & Applied, deleted with evidence \\
+41 & Unidentified alternative reference set & Applied \\
+42 & Threshold definition and pnictide values & Applied \\
+43 & Cluster pool for the budget splits & Applied, corrected \\
+44 & Upper-estimate language & Applied, and cross-fitted \\
+45 & Informal heuristics not evaluated & Applied \\
+46 & Catch definition and split variability & Applied \\
+47 & Clean regeneration and independent review & Applied in part; review open \\
+48 & ``Strongest in every specification'' & Applied \\
+49 & Coverage, metastability, Q1/Q3 framing & Applied \\
+50 & Intercept label, plot reference, contrast & Applied \\
+51 & Claim-level citation verification & Applied in part; 6 of $\sim$31 \\
+52 & Abstract and front-matter length & Applied in part \\
+\bottomrule
+\end{longtable}
+
+\end{document}

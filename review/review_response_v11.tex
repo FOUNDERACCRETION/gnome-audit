@@ -1,0 +1,146 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{cmap}
+\usepackage[T1]{fontenc}
+\input{glyphtounicode}
+\pdfgentounicode=1
+\usepackage{booktabs,hyperref,amsmath}
+\hypersetup{colorlinks=true,linkcolor=blue,urlcolor=blue}
+\sloppy
+\title{\textbf{Response: five items, and a connection drop}}
+\author{}\date{11 October 2026}
+\begin{document}\maketitle\vspace{-3em}
+
+All five applied. One of them came back against the premise of the objection, and your
+machine disconnected from this session partway through, so the last section lists what is
+not yet on your disk.
+
+\section*{1. API selection rule --- measured, and there are no duplicates}
+
+This was answerable by measurement rather than by a statement, so I measured it. The cached
+responses contain zero duplicate \texttt{(material\_id, thermo\_type)} combinations:
+152{,}426 unique identifiers of 152{,}426 rows for \texttt{GGA\_GGA+U}, 37{,}123 of
+37{,}123 for r$^2$SCAN, and 22{,}756 of 22{,}756 in the completeness pull. The pull script
+performs no deduplication of its own, so the API returned exactly one document per
+material per thermo type.
+
+Appendix E now says that, and says what it means: the dictionary construction would retain
+the last document if a material ever yielded two of the same type, but no selection rule is
+exercised in this work, and a replication that does hit duplicates should not rely on
+insertion order.
+
+\section*{2 and 3. Abstract wording --- your phrasings, verbatim}
+
+``Presence of a Materials Project Hubbard-$U$-list element is strongly conditionally
+associated with disagreement in the fitted model'' and ``Neither selective $U$ application
+nor hull proximity explains away this association under the analyses performed''. The
+``All'' sentence now reads ``Under the release documentation's interpretation of its `All'
+reference set, the two cells sit at 14.5\% and 37.4\%, preserving a 22.9-point spread while
+substantially reducing the ratio.''
+
+The abstract is 287 words. Your 250 target and the three clauses you have required of it
+are not simultaneously satisfiable; the hedging costs words. I am not going to quietly pick
+which of your requirements to drop.
+
+\section*{5. ``Leading candidate'' --- gone, in both places}
+
+Both the Conclusion and \S4.3 now say ``a plausible candidate'', and both add that no
+systematic comparison of candidate mechanisms was run and none are ranked. The phrase was
+mine, taken from the fix list's ``leading candidate'' wording, and your objection to it is
+right: nothing in the paper establishes a ranking.
+
+\section*{4. Table 4 --- the premise was wrong, and the uncertainty is now there}
+
+Two separate things, and the first is a correction to the objection.
+
+\paragraph{The design is not rank-deficient.} The objection says the model ``uses a
+minimum-norm solution for residual rank deficiency''. It does not, because there is no
+rank deficiency. Measured: 113 columns, 83 element fractions and 30 surviving interactions,
+numerical rank 113 at a tolerance of $1.6\times10^{-9}$, empty null space, condition number
+$7.0\times10^{2}$. The element-fraction columns do sum to one in every row, but the design
+carries no intercept column, so that creates no dependency. The least-squares solution is
+unique, every within-element contrast is identified, and the projection of each of the 75
+such contrasts onto the numerical null space is exactly zero because the null space is
+empty.
+
+That also corrects the paper's own earlier claim. Draft 27's caption said ``the row spread
+is identified while the level is not''. That was wrong as a statement about rank: both are
+estimated. The caption and text now give the real reason the levels should not be read as
+physical contributions, which is that $\Delta$ contains the correction removal by
+construction.
+
+\paragraph{The spreads now carry cluster-aware intervals.} Cluster bootstrap over
+structural prototypes, 400 replicates, refitting the model on each resampled draw:
+
+\begin{center}
+\begin{tabular}{lrl}
+\toprule
+Element & Spread (meV/atom) & 95\% CI \\
+\midrule
+Mn & 273 & [196, 342] \\
+Cr & 249 & [144, 399] \\
+Fe & 239 & [157, 328] \\
+Ni & \phantom{0}92 & [47, 212] \\
+Co & \phantom{0}36 & [22, 99] \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+All five exclude zero, so the context dependence is not a fitting artefact. The
+\emph{ordering} among them is a different question and the text now says so: the Co and Ni
+intervals overlap each other, and Ni's overlaps the lower end of Fe's. The replicate count
+is 400 rather than the tens of thousands used elsewhere because each replicate refits a
+113-column model; it is stated in the caption with the reason.
+
+\paragraph{Two bugs in my own checking, caught by the check.} The first run asserted that
+each contrast is invariant under an equivalent reparameterisation and failed, reporting a
+2.0 meV/atom discrepancy. The model was fine; my test was not. Dropping one interaction
+column per element is not an invertible reparameterisation --- with a full-rank design it
+fits a restricted model, not the same model in new coordinates. I replaced it with column
+scaling and column permutation, which are invertible. That failed too, at 250 meV/atom,
+because I mapped the scaled fit back wrongly: for $XD\beta' = y$ the original-basis
+coefficients are $D\beta'$, not $\beta'/d$. The corrected line is written but was not run,
+for the reason in the next section.
+
+The identification claim in the paper does not depend on that test. Full rank implies a
+unique least-squares solution, which implies every linear functional of it is invariant
+under any invertible reparameterisation. The empirical test is belt and braces on a
+theorem, and rank was measured.
+
+\section*{What is not on your machine}
+
+Your computer dropped off this session's bridge during the last call, so the following
+exist only here and need to be put back:
+
+\begin{itemize}
+\item \texttt{paper\_draft28.tex} and \texttt{.pdf} --- everything above. Your
+\texttt{paper/gnome\_audit\_paper.tex} is still Draft 27.
+\item The corrected scaling line in \texttt{phase43\_context\_identify.py}. The copy on
+your disk still has \texttt{c\_scaled/d} and so still exits 1 on its own invariance check.
+Its two output CSVs were written by the run that produced the numbers above, so
+\texttt{results/context\_spread\_ci.csv} and \texttt{results/context\_identification.csv}
+are present and correct apart from the reparameterisation row.
+\item \texttt{phase43} is not in \texttt{run\_all.py}'s \texttt{ORDER} and has no headline
+checks; the full-rank assertion and the five intervals are therefore not yet covered by
+layer one.
+\item \texttt{check\_paper.py} does not yet parse Table 4's new CI column.
+\item The duplicate check is stated in the paper but not asserted in
+\texttt{q2\_known\_baseline.py}. It should be, so a future pull that does return duplicates
+fails loudly instead of silently keeping the last row.
+\item None of the three checkers has run against Draft 28.
+\end{itemize}
+
+\paragraph{One discrepancy to reconcile when they do.} \texttt{context\_spread\_ci.csv}
+rounds nickel's spread to 93, computed as max minus min of the unrounded effective
+coefficients. Table 4 shows 92, which is max minus min of the \emph{rounded} per-context
+values, $+84 - (-8)$. Both are defensible and they disagree by one. The fix is for
+\texttt{phase43} to read the point spreads from \texttt{context\_dependence.csv} rather
+than recompute them, so the two files cannot diverge. Until that is done, do not let
+\texttt{check\_paper.py} compare the Table 4 spread column against
+\texttt{context\_spread\_ci.csv}; it will fail on nickel, correctly.
+
+Reconnect the machine and I will commit Draft 28, apply the two code fixes, wire
+\texttt{phase43} into the driver with the full-rank assertion as an \texttt{[impl]} check,
+extend the table parser, and run all three checkers.
+
+\end{document}

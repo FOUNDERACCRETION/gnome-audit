@@ -1,0 +1,5 @@
+split,value,n_hi,hi,n_lo,lo,gap_pp
+pipeline,True,1137,26.0,16557,6.1,20.0
+pipeline,False,2402,27.3,10075,5.0,22.3
+in training set,True,3047,27.2,22678,5.7,21.6
+in training set,False,492,25.0,3926,5.6,19.4

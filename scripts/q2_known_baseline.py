@@ -35,6 +35,23 @@ def pull(tt):
 print("pulling r2SCAN...",flush=True); sc=pull("r2SCAN"); print(f"r2SCAN {len(sc)}",flush=True)
 print("pulling GGA_GGA+U...",flush=True); gg=pull("GGA_GGA+U"); print(f"GGA {len(gg)}",flush=True)
 
+def _assert_unique(rows, label):
+    """Collapsing to one record per material_id by dict construction would silently keep
+    whichever document the API returned last. That is only safe when no material returns
+    two documents of the same thermo type, so refuse to continue rather than guess."""
+    from collections import Counter
+    c = Counter(d["material_id"] for d in rows)
+    dups = [m for m, k in c.items() if k > 1]
+    if dups:
+        raise SystemExit(
+            f"{label}: {len(dups)} material_id values returned more than one thermo "
+            f"document (e.g. {dups[:5]}). Insertion order is not a selection rule. "
+            f"Define a documented deterministic rule, record it in the appendix, and rerun.")
+    print(f"  {label}: {len(rows)} rows, {len(c)} unique material_id, no duplicates")
+
+_assert_unique(sc, "r2SCAN")
+_assert_unique(gg, "GGA_GGA+U")
+
 scan={d["material_id"]:d["energy_above_hull"] for d in sc if d.get("energy_above_hull") is not None}
 LN=set("La Ce Pr Nd Pm Sm Eu Gd Tb Dy Ho Er Tm Yb Lu".split())
 TM3D=set("Sc Ti V Cr Mn Fe Co Ni Cu Zn".split())

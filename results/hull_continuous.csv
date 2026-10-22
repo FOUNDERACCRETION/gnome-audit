@@ -1,0 +1,43 @@
+model,feature,odds_ratio,or_lo,or_hi
+population,n_matched_with_pbe_decomp,117018.0,,
+population,n_prototype_clusters,7822.0,,
+no hull-distance term,intercept,0.059,0.053,0.065
+no hull-distance term,has_U,3.533,3.185,3.92
+no hull-distance term,has_3d_nonU,1.115,0.992,1.253
+no hull-distance term,has_Ln,1.117,1.014,1.23
+no hull-distance term,is_oxide,2.634,2.274,3.052
+no hull-distance term,is_pnictide,1.926,1.688,2.198
+no hull-distance term,is_halide,1.271,0.978,1.651
+no hull-distance term,is_chalcogenide,1.398,1.183,1.651
+no hull-distance term,is_bcs,1.779,1.513,2.093
+no hull-distance term,n_elements_z,0.831,0.8,0.863
+no hull-distance term,log_nsites_z,1.003,0.947,1.063
+no hull-distance term,mcfadden_r2,0.0682,,
+natural spline in PBE decomposition energy,intercept,0.042,0.037,0.047
+natural spline in PBE decomposition energy,has_U,3.431,3.07,3.834
+natural spline in PBE decomposition energy,has_3d_nonU,1.072,0.955,1.202
+natural spline in PBE decomposition energy,has_Ln,1.007,0.91,1.115
+natural spline in PBE decomposition energy,is_oxide,3.164,2.693,3.717
+natural spline in PBE decomposition energy,is_pnictide,2.576,2.224,2.983
+natural spline in PBE decomposition energy,is_halide,1.973,1.505,2.588
+natural spline in PBE decomposition energy,is_chalcogenide,1.661,1.377,2.004
+natural spline in PBE decomposition energy,is_bcs,2.342,1.94,2.827
+natural spline in PBE decomposition energy,n_elements_z,0.858,0.824,0.893
+natural spline in PBE decomposition energy,log_nsites_z,0.939,0.88,1.002
+natural spline in PBE decomposition energy,mcfadden_r2,0.1556,,
+spline plus has_U and oxide interactions with depth,intercept,0.035,0.03,0.04
+spline plus has_U and oxide interactions with depth,has_U,4.285,3.765,4.876
+spline plus has_U and oxide interactions with depth,has_3d_nonU,1.066,0.949,1.198
+spline plus has_U and oxide interactions with depth,has_Ln,1.0,0.904,1.105
+spline plus has_U and oxide interactions with depth,is_oxide,3.748,3.155,4.453
+spline plus has_U and oxide interactions with depth,is_pnictide,2.583,2.235,2.985
+spline plus has_U and oxide interactions with depth,is_halide,2.004,1.528,2.628
+spline plus has_U and oxide interactions with depth,is_chalcogenide,1.672,1.387,2.015
+spline plus has_U and oxide interactions with depth,is_bcs,2.377,1.972,2.866
+spline plus has_U and oxide interactions with depth,n_elements_z,0.862,0.828,0.898
+spline plus has_U and oxide interactions with depth,log_nsites_z,0.937,0.878,0.999
+spline plus has_U and oxide interactions with depth,has_U_x_depth,0.518,0.427,0.628
+spline plus has_U and oxide interactions with depth,is_oxide_x_depth,0.617,0.504,0.755
+spline plus has_U and oxide interactions with depth,mcfadden_r2,0.1594,,
+interaction terms,has_U_x_depth,0.518,0.427,0.628
+interaction terms,is_oxide_x_depth,0.617,0.504,0.755

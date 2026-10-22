@@ -1,7 +1,8 @@
 # Reproducing every number in the paper
 
-Time on a 2-core laptop: about 40 minutes for the GNoME-only phases, plus 10–20 minutes
-for the two Materials Project pulls.
+Two layers of checking run on every push; see `.github/workflows/reproduce.yml` for the
+authoritative recipe. If you are reviewing rather than reproducing, read `REVIEWER.md`
+instead — reproduction and correctness are different jobs.
 
 ## 1. Environment
 
@@ -10,7 +11,11 @@ python -m venv .venv
 .venv/bin/pip install -r requirements.txt      # Windows: .venv\Scripts\pip
 ```
 
-Python 3.10 or newer. No compiler, no scipy, no pymatgen.
+Python 3.10 or newer. pandas, numpy, matplotlib, and `requests` for the two Materials
+Project pulls. **No scipy, no scikit-learn, no pymatgen.** The logistic regressions, the
+cluster bootstraps and the sandwich estimator are written by hand in numpy, so no
+dependency upgrade can silently change a number. `requirements.txt` pins the exact
+versions every figure in the paper was produced with.
 
 ## 2. Data (not in the repo, ~175 MB)
 
@@ -21,62 +26,126 @@ https://storage.googleapis.com/gdm_materials_discovery/gnome_data/stable_materia
 https://storage.googleapis.com/gdm_materials_discovery/gnome_data/stable_materials_summary.csv
 ```
 
-Check:
+Verify the checksums, not just the row counts:
 
 ```
-python -c "import pandas as pd; r=pd.read_csv('data/stable_materials_r2scan.csv'); s=pd.read_csv('data/stable_materials_summary.csv', usecols=['MaterialId']); print(len(r), len(s))"
-# expected: 139541 554054
+sha256sum data/*.csv
 ```
 
-If the row counts differ, DeepMind has updated the files and the numbers below will
-not match exactly. The paper states the counts it used.
+| File | Rows | Bytes | SHA-256 |
+|---|---|---|---|
+| `stable_materials_summary.csv` | 554,054 | 151,452,777 | `c37bffb9dd6c51d38d259a2d340ecf796194729f656d474828512390db1ff0c9` |
+| `stable_materials_r2scan.csv` | 139,541 | 22,004,293 | `6a811395b065f43ae7911597405eec0ecfa88251e918f4c0ba8e4e99a75656fd` |
 
-## 3. Materials Project key (only for §4.11 and §4.14)
+Both downloaded 9 October 2026. If a checksum differs, DeepMind has updated the file and
+the numbers below will not match exactly; the paper states the counts and sums it used, so
+a mismatch is informative rather than fatal. `MaterialId` is unique in both files, so no
+duplicate resolution is required. Appendix E of the paper lists every column read, the
+units, the missing-value coercion and the join rules.
 
-Get a free key at https://next-gen.materialsproject.org/api and export it:
+## 3. Materials Project key (two phases only)
+
+`q2_known_baseline.py` and `q2b_completeness.py` query the public API. Get a free key at
+https://next-gen.materialsproject.org/api and export it:
 
 ```
-export MP_API_KEY=...          # or: set MP_API_KEY_FILE=/path/to/file
+export MP_API_KEY=...          # or: export MP_API_KEY_FILE=/path/to/file
 ```
 
-Without a key, `run_all.py` skips the two MP scripts and reports that §4.11 and the
-completeness probe were not reproduced. Everything else runs.
+Without a key those two phases are skipped and their cached outputs
+(`results/known_baseline.csv`, `mp_completeness.csv`, `mp_gga_raw.csv`,
+`mp_r2scan_raw.csv`) are reused. Everything that then reads them is **labelled
+`[stored, not regenerated here]`** in the check output, so a run without a key cannot be
+mistaken for a full one. The exact query — endpoint, the literal `thermo_types` values
+`r2SCAN` and `GGA_GGA+U`, the `_fields` string and the paging — is in Appendix E.
 
-## 4. Run
+## 4. Delete the stored results first
+
+This is the step that makes the rest meaningful:
 
 ```
-python run_all.py              # all phases, then the check
-python run_all.py --check      # only compare existing results/ against the paper
-python run_all.py --skip phase8_referee,q2b_completeness   # skip slow or network phases
+find results -type f \( -name '*.csv' -o -name '*.png' -o -name '*.json' \) \
+     ! -name 'known_baseline.csv' ! -name 'mp_completeness.csv' \
+     ! -name 'mp_gga_raw.csv' ! -name 'mp_r2scan_raw.csv' -delete
 ```
 
-`run_all.py` runs the scripts in dependency order, writes each one's stdout to
-`results/<script>.log`, and finishes by comparing the headline quantities in
-`results/` against the values printed in the paper (tolerance 0.1 percentage points
-on rates, 0.02 on odds ratios; bootstrap phases are seeded so they should match
-exactly, but floating-point order across BLAS builds can move the last digit).
+`results/` is committed, so without this the checks can pass on files you did not
+generate. The CI workflow does exactly the above before every run.
 
-## 5. What "reproduced" means here
+## 5. Run
 
-The check compares these quantities, which are every number in the abstract:
+```
+python run_all.py
+```
 
-| Quantity | Paper value | Source file |
-|---|---|---|
-| Global flip rate, MP reference | 13.04 % | `phase2_summary.json` |
-| Global flip rate, MP+OQMD reference | 15.93 % | `phase2_summary.json` |
-| Quaternary spread, top cell − bottom cell | 26.7 pp | `phase2_summary.json` |
-| Top quaternary cell (oxide, 3d, no Ln) | 30.7 % | `stratified.csv` |
-| Bottom quaternary cell (intermetallic, no 3d, no Ln) | 4.0 % | `stratified.csv` |
-| Cluster-robust OR for has_U | 3.45 [3.13, 3.80] | `logit_cluster_robust.csv` |
-| Budget: flips caught at 20 % recomputation, chemistry-ranked | 37.1 ± 0.9 % | `budget_repeated.csv` |
-| Budget: random at 20 % | 20.1 % | `budget_repeated.csv` |
-| Known-materials aggregate flip (MP, GGA-stable with r²SCAN) | 14.88 % | `known_baseline.csv` |
+This regenerates `results/` end to end, then checks two things:
 
-A re-run that matches all of these has reproduced the paper's central claims. The
-secondary tables (per-element, band gap, Δ, hull-distance strata) are checked visually
-against the paper's appendices; their scripts print them in the same layout.
+- **84 headline quantities** against the values printed in the paper. Seven are
+  claim-level rather than value-level — the budget ordering holding at every budget, the
+  cross-fitted margin staying positive, the iron excess being smallest in oxides, the
+  headline cell intervals staying disjoint, and so on. It deliberately does *not* assert
+  that any interval excludes zero; that is a result, not an invariant.
+- **655 printed table values**, via `scripts/check_paper.py`, which parses the numbers out
+  of the LaTeX source and diffs them against the result files, interval endpoints
+  included. A transcription error in a table fails the build.
+- **Superseded values anywhere in the source**, via `scripts/check_stale.py`. The table
+  checker cannot see prose, and the failure that has recurred most often in this paper is a
+  recomputed quantity whose old value survives in a sentence or a caption. Every number that
+  has changed is listed there with what replaced it; the check greps the whole source and
+  fails on any hit, with an allowance for the few superseded values quoted deliberately as
+  history.
 
-## 6. If something does not match
+A clean run ends with `ALL HEADLINE NUMBERS REPRODUCED` and `every parsed table value
+matches the analysis output`. The driver **exits non-zero if any phase crashes even when
+the surviving numbers match** — that failure mode has happened here, with a crashed phase
+leaving stale outputs that the checks then passed.
 
-Open an issue with the output of `python run_all.py --check` and
-`pip freeze`. The most common cause is a changed upstream CSV (step 2).
+Useful flags:
+
+```
+python run_all.py --check                       # only re-check existing results/
+python run_all.py --skip phase33_percentile_conv,phase27_ame_ci    # drop the slow ones
+```
+
+## 6. Runtimes
+
+`run_all.py` writes `results/runtimes.csv` with the wall time of every phase, the total,
+the platform and the Python version. Read that rather than trusting a number in a README,
+which goes stale the moment a phase is added. For orientation, the slowest phases are the
+bootstrap and policy evaluations: `phase24_budget_strong` and `phase27_ame_ci` run two to
+three minutes each, `phase16_excess_ci` about forty seconds at 100,000 replicates,
+`phase33_percentile_conv` about a minute, `phase32` and `phase34` under a minute each.
+
+Replicate counts are environment variables where it helps a reviewer: `NB` on
+`phase16_excess_ci.py`, `phase32_bh_identity.py`, `phase34_converged_intervals.py` and
+`phase35_coarse_cluster.py`, and `SEED` where a stability check wants a different draw.
+Lowering `NB` makes a run fast and the intervals wrong; the committed defaults are the
+ones the paper uses.
+
+## 7. Rebuild the PDF
+
+```
+cd paper && pdflatex gnome_audit_paper.tex && pdflatex gnome_audit_paper.tex && pdflatex gnome_audit_paper.tex
+```
+
+Three passes, for the table of contents and the cross-references. A clean build reports no
+errors, no overfull or underfull boxes and no undefined references. Figures resolve from
+`paper/` first and then `../results/`, so a figure regenerated into `results/` will be
+picked up only after you copy it into `paper/` or delete the stale copy there — a stale
+figure has slipped through here before.
+
+## 8. What the checks do and do not establish
+
+`VALIDATION.md` records what each of the three layers asserts, why each of the 58 headline
+checks is classified as `[impl]`, `[result]` or a reference comparison, and what none of
+them can establish. Read it before concluding that a green run means the analysis is right.
+
+## 9. If a number does not match
+
+In order of likelihood:
+
+1. You did not delete `results/` (§4), so you are checking files you did not make.
+2. The input checksums differ (§2) — the upstream file changed.
+3. A phase crashed. Read `results/<phase>.log`; the driver names the failing phase.
+4. It is a real disagreement. That is the interesting case: please open an issue, and see
+   `REVIEWER.md` for the parts of the analysis most worth doubting.

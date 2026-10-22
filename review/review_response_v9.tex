@@ -1,0 +1,142 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{cmap}
+\usepackage[T1]{fontenc}
+\input{glyphtounicode}
+\pdfgentounicode=1
+\usepackage{booktabs,hyperref,amsmath}
+\hypersetup{colorlinks=true,linkcolor=blue,urlcolor=blue}
+\title{\textbf{Response to the fix list}}
+\author{}\date{11 October 2026}
+\sloppy
+\begin{document}\maketitle\vspace{-3em}
+
+Four of the five headline items are applied. All three checkers green afterwards: 63
+headline quantities, 351 printed values, 25 superseded literals. 53 pages.
+
+\section*{Two things in the fix list are wrong, and one of my passages was wrong again}
+
+\textbf{The Fe$_3$C figure is mis-attributed.} The list credits the nearly 30\%
+over-magnetisation of Fe$_3$C to Mej\'ia-Rodr\'iguez and Trickey. It is Fu and Singh's
+result, which Mej\'ia-Rodr\'iguez and Trickey quote: ``In Fe--3C, \emph{they} found SCAN
+gives nearly 30\% over-magnetization per three-iron-atom formula unit.'' The paper now
+attributes it to Fu and Singh. Mej\'ia-Rodr\'iguez and Trickey's own contribution is
+diagnostic --- tracing the error to the iso-orbital indicator --- and they are cited for
+the $\ge$20\% bcc Fe figure and that diagnosis.
+
+\textbf{The ``Relative'' column cannot be the better primary outcome.} The list suggests
+checking it, and it was the right thing to check. It is documented as the leave-one-out
+hull, and it is \emph{empty in both released files}: zero populated rows of 554{,}054 in
+the summary file and zero of 139{,}541 in the recomputation file. The paper now says so in
+one sentence, and \texttt{phase40} asserts it, so a future run notices if DeepMind ever
+populates it.
+
+\textbf{My \S4.13 passage was wrong a second time.} Draft 24 said recovering the
+Materials Project sub-hull margin ``requires the competing entries of each chemical system
+and not the four summary fields we retrieved.'' That is false. The thermo documents expose
+\texttt{decomposition\_enthalpy} --- the phase-separation energy of Bartel et al., computed
+by removing each entry from its own phase diagram, negative for stable entries and
+populated for all of them --- and
+\texttt{equilibrium\_rea}\-\texttt{ction\_energy\_per\_atom}, the same margin restricted to
+entries flagged stable. One extra query against the same
+endpoint supplies the covariate. The passage now says the omission is mine and is cheap to
+repair. That is twice I have written a wrong account of this one gap.
+
+\section*{P0-1. The reference sets are documented}
+
+Verified against \texttt{DATASET.md}: ``All'' is the distance to the convex hull of all
+entries, ``Relative'' the hull of all entries except the current one, ``MP'' the Materials
+Project hull, ``MP OQMD'' Materials Project plus OQMD including recalculations. \S3.1 now
+states all four with a citation, and \S4.16's three paragraphs of hedging are gone ---
+``unidentified alternative reference set'', ``our reading, which we state as an inference'',
+``the question is settled by asking the dataset authors'' all deleted. It reads as a
+sensitivity analysis against a known denser hull, and the intermetallic rise from 9.2\% to
+22.3\% at class level and 4.0\% to 14.5\% in the headline cell is now stated as evidence
+that the MP-referenced hull is least complete for intermetallics.
+
+Two caveats survive because they are true. \texttt{DATASET.md} documents the
+\emph{summary} file and does not define the recomputation file's columns, which carry the
+same four names and are where the 25.8\% comes from; the paper says it takes the documented
+meanings as applying to both, on the strength of the identical names. And a denser hull
+still does not identify which phases were added to which chemistry.
+
+\section*{P0-2. The r$^2$SCAN protocol}
+
+New paragraph in \S3.1: three jobs per material (PBE pre-relaxation with PBE54 potentials,
+r$^2$SCAN relaxation, r$^2$SCAN static), \texttt{MPScanRelaxSet} and
+\texttt{MPScanStaticSet} settings, structures re-relaxed rather than evaluated at the PBE
+geometry, PBE52/PBE54 PAW datasets that can differ from those behind the PBE labels, and
+ferromagnetic initialisation throughout. The sentence that matters: a verdict change
+reflects functional, correction scheme, PAW dataset, relaxed geometry and possibly
+converged magnetic state together. The PAW-dataset confound was absent from the paper
+entirely.
+
+\section*{P0-3. Licence}
+
+Verified at source: GNoME data under CC BY-NC 4.0, code under Apache 2.0. A licensing
+paragraph is now in the data statement and \texttt{results/PROVENANCE.md} is corrected ---
+it previously said only that the GNoME inputs were governed by ``whatever terms DeepMind
+applies to them''.
+
+The redistribution check passes. No file in \texttt{results/} carries GNoME per-material
+rows; the largest GNoME-derived result is 83 rows of per-element summaries. The two large
+per-material files are Materials Project extracts under CC BY 4.0, which is what
+\texttt{PROVENANCE.md} already documented. The non-commercial clause against a company
+affiliation is flagged in both places and left for the author; it is not a question this
+document can answer.
+
+\section*{P1-1. The magnetism literature}
+
+All four references verified, with full author lists and the attributed findings checked
+against the papers. ``The data do not support that reading'' is gone. The paragraph now
+reads: an element-presence indicator cannot separate $U$-list membership from 3$d$
+magnetism, and one magnetic mechanism is well documented --- Ekholm et al.\ on bcc Fe, hcp
+Co and fcc Ni with SCAN worse than PBE for Ni and Co; Fu and Singh on V, Co, Ni, Pd and
+Fe$_3$C; Mej\'ia-Rodr\'iguez and Trickey on $\ge$20\% in bcc Fe; Tran et al.\ on
+intermetallic ferromagnets; Kothakonda et al.\ on r$^2$SCAN exceeding SCAN, iron
+overestimated by 24\% against 17\%.
+
+Three features of the results are stated as consistent with it: the Fe, Co, Cr, Mn ordering
+of the per-element rates, the concentration of the iron and cobalt excess in metallic anion
+classes, and its near-absence in oxides. Nickel is no longer anomalous --- its nearly filled
+majority band limits further enhancement. Molybdenum and tungsten remain unexplained and
+are still named as such. The paragraph ends by saying the mechanism is untested, that the
+released files carry no magnetisation field, and what the discriminating calculation would
+be.
+
+\section*{P2. Editing defects, and the text layer}
+
+Applied: the reference-set sentence is in the abstract; both figure titles corrected inside
+the images and regenerated (``red = GNoME flips more, green = GNoME flips less'';
+``Flip rate by PBE band-gap bin and 3$d$ content''); ``nearly eightfold range'' replaced by
+the 26.7-point spread in \S4.1 as well as the abstract; the per-element heading now says
+``against the MP reference''; every remaining ``registered'' is ``pre-committed'', including
+the \S3.8 heading; the unmatched-identifier sentence now says 2.0 points lower and not
+negligible at $n=22{,}498$; the ``The time of writing'' typo fixed; the 84\% and 86.8\%
+comparison now says the source gives no denominators or reference hull.
+
+\textbf{The ligature problem was real and is fixed.} \texttt{lmodern} is not installed in
+this build environment, so the prescribed preamble fails; \texttt{cmap} plus
+\texttt{glyphtounicode} does the job. Measured on the built PDF: ``flip rate'' 35
+occurrences, ``difference'' 28, ``workflow'' 19, ``coefficient'' 10, and zero occurrences of
+the broken forms the old text layer produced. On Draft 24 the same test found zero of the intact forms.
+
+\section*{Queued}
+
+P1-3, pymatgen version and the no-corrections-recomputed statement. P1-4, lanthanide PAW
+labels from \texttt{MPRelaxSet.yaml} --- concrete and not yet done. P1-5, the prior-art
+search. P1-2's actual re-pull, which needs the machine that holds the credentials; the
+Materials Project API is unreachable from here.
+
+The cut plan to about 14 pages plus supplement is the largest remaining item and is
+deliberately last: this pass added a protocol paragraph, a mechanism paragraph, a licensing
+paragraph and four references. The supplement has to exist before the cut can land, and the
+cut is where the 53 pages come down.
+
+From P3: fixing the propensity model with the spline already in the paper and trimming to
+the overlap region, BCa intervals for the two headline cells and the Fe oxide excess,
+reliability curve and Brier score on held-out clusters, and the finite-cluster correction in
+the sandwich estimator. All four are feasible from cached data. The magnetism calculation
+and the third reference hull are not.
+
+\end{document}

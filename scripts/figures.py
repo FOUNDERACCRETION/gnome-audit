@@ -53,7 +53,7 @@ for a,b,l in pairs:
     if abs(a-b)>5: ax.annotate(l,(b,a),fontsize=6.5,xytext=(3,3),textcoords="offset points")
 ax.set_xlabel("known materials (Materials Project) flip rate (%)")
 ax.set_ylabel("GNoME flip rate (%)")
-ax.set_title("Matched chemistry cells: AI-discovered vs known\n"
-             "red = GNoME worse, green = GNoME better",fontsize=10)
+ax.set_title("Matched chemistry cells: GNoME vs known\n"
+             "red = GNoME flips more, green = GNoME flips less",fontsize=10)
 ax.grid(alpha=.3); fig.tight_layout(); fig.savefig(f"{R}/fig3_gnome_vs_known.png",dpi=200)
 print("wrote 3 figures")

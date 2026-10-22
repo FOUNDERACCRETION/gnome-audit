@@ -1,0 +1,9 @@
+reference,cell,n,n_clusters,rate_pct,lo,hi
+MP,"oxide, no Ln, 3d",2478,650,30.7,27.6,33.8
+MP,"intermetallic, no Ln/3d",5025,846,4.0,3.3,4.7
+MP,"spread (oxide - intermetallic, pp)",,,26.7,23.5,29.9
+MP,ratio (oxide / intermetallic),,,7.67,6.29,9.52
+All,"oxide, no Ln, 3d",2478,650,37.4,34.6,40.4
+All,"intermetallic, no Ln/3d",5025,846,14.5,12.9,16.1
+All,"spread (oxide - intermetallic, pp)",,,22.9,19.7,26.3
+All,ratio (oxide / intermetallic),,,2.58,2.26,2.97

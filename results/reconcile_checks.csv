@@ -1,0 +1,16 @@
+quantity,value
+t10_or_with_hydrides_has_U,3.4476
+t10_or_hydrides_dropped_has_U,3.4682
+t10_hydride_drop_delta_has_U,0.0207
+t10_or_with_hydrides_has_3d_nonU,1.1012
+t10_or_hydrides_dropped_has_3d_nonU,1.104
+t10_hydride_drop_delta_has_3d_nonU,0.0029
+t10_or_with_hydrides_has_Ln,1.0228
+t10_or_hydrides_dropped_has_Ln,1.0217
+t10_hydride_drop_delta_has_Ln,-0.0011
+t10_hydride_drop_max_shift,0.0227
+ps_min_eligible_recomputed,1.51905e-06
+ps_min_eligible,7.12458e-218
+ps_max_eligible,0.8002
+untrimmed_max_weight,658307.9
+below_1e-2_floor,26.0

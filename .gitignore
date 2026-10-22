@@ -1,8 +1,21 @@
+# The two GNoME CSVs are 175 MB and public; download them per REPRODUCE.md section 2.
 data/
-results/mp_*_raw.csv
+
+# Phase logs are regenerated on every run and would otherwise churn the diff.
 results/*.log
+
+# The cached Materials Project pulls ARE committed, deliberately: without them a clone
+# with no API key cannot run phase26, phase28 or phase30 at all, and the paper states
+# that they are available. They are derived from Materials Project data, which is
+# CC BY 4.0; see results/PROVENANCE.md.
+
 *.pyc
 __pycache__/
+
+# Never commit the credential. The key itself lives outside this directory.
 mp_api_key.txt
+*api_key*
+.env
+
+# Scratch files from the pipeline's development that are not part of any result.
 scripts/q2_smoke*.py
-results/phase10_old.log

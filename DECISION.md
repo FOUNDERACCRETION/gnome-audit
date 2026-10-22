@@ -247,3 +247,325 @@ known_baseline.csv, which the Materials Project phase produces and which the run
 cannot regenerate without an API key, so figures.py crashed. All 20 checked quantities
 reproduced from the raw CSVs in that same run. The two MP-derived files are now exempt
 from the delete and any check reading them is labelled "[stored, not regenerated here]".
+
+# Phase 7: independent adversarial review and major revision — 2026-10-10
+
+A cold referee that had not seen the drafting was asked to review Draft 7 to reject. It
+returned major-revision-or-reject. Everything it raised was checked against the data
+rather than accepted; the outcome was five real defects, two of which changed claims.
+
+CONFIRMED AND FIXED
+1. BH correction was broken: cummin applied over an ascending p-value sort propagated
+   Fe's p~1e-85 to every later element. Hf had raw p=0.95 and was flagged significant.
+   The abstract claimed all 83 contrasts survived. True count: 51 of 83.
+2. The budget model benchmarked chemistry-ranking only against uniform random. Ranking
+   by PBE hull distance alone — free, no fitting — beats it at every budget (40.4% vs
+   38.1% at a 20% budget). Combined reaches 46.1%. The paper's operational
+   recommendation was wrong and is now "hull distance first, composition on top,
+   worth ~6 points".
+3. Sections 3.6 and 4.10 stated OPPOSITE pre-registered lanthanide predictions, and both
+   were backwards relative to the committed spec, which registered "at or below the
+   global rate, refuted if above". Result 11.8% vs 13.0% CONFIRMS it. Fixed.
+4. "Borides, pnictides and intermetallics, where PBE runs with no correction at all" is
+   false: MP2020 corrects O S F Cl Br I N H Se Si Sb Te. Only the +U is cation-specific.
+   Reframed around that, which is cleaner: anion corrections are per-anion constants and
+   cancel in a within-anion excess, so the design already isolated U. Added the decisive
+   contrast: within halides, F-containing (U applied) Fe excess +8.8 vs +16.3 for
+   Cl/Br/I only; Mn +2.4 vs +21.5.
+5. The claim that MP exposes no sub-hull margin for stable entries was wrong (pymatgen
+   get_decomp_and_phase_separation_energy recovers it). Stated as not-yet-done rather
+   than impossible.
+
+REFEREE POINTS CHECKED AND REBUTTED
+6. "Elemental reference offsets could produce the whole gradient." They cannot: a
+   decomposition energy is evaluated at fixed composition, so an additive per-element
+   shift moves compound and competitors identically and cancels. Reference errors move
+   formation energies only. The empirical version of the test is also collinear by
+   construction, because the cells are defined by element presence — noted in the paper
+   so no one repeats it. The discriminating test is context dependence: Fe contributes
+   -31 meV/atom per unit atomic fraction in oxides and +195 in halides, spread 239, where
+   additivity requires 0. Cr 249, Mn 273. For Fe/Cr/Mn the oxide context is lowest, an
+   independent recovery of the U-suppression result.
+7. "Winner's curse." Gradient is +20.0 vs +22.3 across generation pipelines and +21.6 vs
+   +19.4 across training-set membership. Rules out a differential curse; a uniform one
+   remains possible and is now stated as a live alternative for the MP comparison only.
+
+OTHER CORRECTIONS
+8. Validation compared mismatched populations. Quaternary survival 87.35% vs reported
+   86.8% (0.55pp); binaries+ternaries 85.34% vs 84%. The "within 0.2pp" claim was a
+   coincidence between different populations and is withdrawn.
+9. Design effect: equal-size formula gives 3.15, unequal-size gives 46.3, because five
+   clusters hold 7.7% of the data. Neither is used for inference; both are now reported,
+   with the empirical bootstrap (1.82) and sandwich (2.77) landing between. Dropping the
+   5/20/50 largest clusters moves the headline from +26.7 to +26.8/+27.3/+28.2.
+10. Band gap: the old binary split concluded the gap dependence "largely disappears"
+    once 3d is controlled. False. In bins, the 3d excess is +10.5/+9.6/+10.4/+11.8 and
+    the gap effect persists at fixed 3d content (8.5% to 18.9% among no-3d). Two
+    independent axes. Also: the gap column is in the summary file, not the r2scan file,
+    and contains infinities that were never screened.
+11. Logistic model was main-effects-only. The lanthanide OR of 1.02 averages -9.9pp in
+    halides against +7.0pp in pnictides; interactions improve fit by chi2=879 on 14 df.
+12. Shift table rebuilt on the primary cell definition with quartiles and 1% shares,
+    fixing cell-count discrepancies of 2-10 materials against other tables.
+13. Abstract cut 545 -> 378 words; draft header comments stripped; repeated disclaimers
+    and the "nor is it X" section cadence removed; "All"-reference inference explicitly
+    marked as non-diagnostic; benchmark paragraph narrowed to what the data support.
+
+run_all.py now checks 23 quantities including two claim-level checks: that the budget
+ordering holds at every budget, and that the Fe excess is smallest in oxides.
+
+# Phase 8: second cold error-hunt — 2026-10-11
+
+A second independent agent, told to hunt defects rather than review, returned 74 on
+Draft 10. Each was checked against the data before acting. Five were rated FATAL and
+four of those were real.
+
+FATAL, fixed
+1. "13.0% should be read as a lower bound on the population rate" contradicted Section
+   4.13: IPW moves the estimate DOWN, 13.37% -> 12.71%. The hull-distance component does
+   push up but is outweighed by composition and cell size. No direction is now claimed.
+2. The regressor labelled "open-shell d (U list)" IS the U list, which contains Mo and W
+   (4d/5d) and excludes Cu (d9 as Cu2+). The paper then argued the operative variable was
+   magnetic open-shell d character rather than U-list membership, which that regressor
+   cannot test. Refit three indicators (phase21): U list logLik -50471.5, 3d subset
+   -50328.5 (best), open-shell 3d incl. Cu -50589.5 (worst). Cu flips at 12.6%, BELOW the
+   global 13.0%, despite being open-shell and magnetic; Mo and W flip at 20.2% and 18.2%.
+   The magnetic reading is refuted by our own data and has been replaced: the predictor is
+   U-list membership, i.e. the property that motivated the correction list.
+3. Delta was described as a functional difference. It is (uncorrected r2SCAN) minus
+   (GGA+U + MP2020), so it contains the correction removal. Defined explicitly now, and
+   the element x anion table is no longer called an "independent estimate" of the U
+   suppression -- it is the same measurement reparameterised.
+4. The pre-registered lanthanide test compared a group that is 59.4% of the dataset
+   against a global rate it dominates. Against non-lanthanides the gap is 11.8% vs 14.8%,
+   and the regression-adjusted effect is null (OR 1.02 [0.93, 1.12]). Reported as
+   confirmed-as-stated but uninformative as posed.
+5. NOT real as stated, but exposed our own error: the band-gap section claimed 26,995
+   materials carry an infinite gap. The true figure is 2,177 infinite; the attrition is
+   dominated by the 22,498 IDs absent from the summary file. Rewritten.
+
+SERIOUS, fixed: the "All" ordering is not preserved in detail (chalcogenides fall below
+intermetallics; oxides no longer rank first); intermetallics gain most only on the ratio
+scale; hydrides not intermetallics are nominally the most complete MP class; Ni does show
+a small intermetallic excess (+2.0 [+0.3,+3.8]); the halide interval excludes unity;
+anion corrections do not cancel exactly and the pnictide and boride classes are mixed with
+respect to them; "PBE" now defined once as PBE+U+MP2020; Table 13 gained n, cluster
+intervals and a sign test (14/20 worse, p=0.115, 11 of 20 intervals exclude zero); Fe
+excess gained an odds-ratio column since oxides have the highest baseline.
+
+One apparent contradiction worth recording because it will be raised again: fluorides
+flip at 24.8% against 7.2% for Cl/Br/I, and F is the 5th-highest element overall, which
+looks like it refutes U-suppression. It does not -- the class baseline and the
+within-class TM excess are different quantities. The excess is +6.3 among fluorides
+(where U applies) and +7.8 among the other halides. Both are now in Section 4.3.
+
+Remaining open: the budget comparison still lacks a paired per-split difference; the
+Matbench test-set composition is still uncomputed; the "All" column is still undocumented
+and unasked; references still not author-verified.
+
+# Phase 9: third error hunt, reproducibility hardening — 2026-10-11 (overnight)
+
+Third independent hunt on Draft 11 returned 41 defects. Each checked before acting.
+
+FATAL, fixed
+- The hull-completeness bias on the known-materials comparison was stated with the sign
+  inverted: if the MP oxide flip rate is understated then GNoME-minus-known is OVERstated,
+  so +17.3 is an upper bound, not a lower bound. Introduced during the round-4 rewrite.
+
+SERIOUS, fixed
+- Appendix B claimed "all 83 elements" but the source table contained only 59, and the
+  multicols environment silently overflowed the page. Rebuilt from
+  per_element_clustered.csv as a longtable: all 83 now render, with an asterisk marking
+  the 51 that survive BH. Copper, the element the Section 4.3 argument turns on, was one
+  of those missing from the printed table.
+- "Oxides, pnictides and borides remain highest and intermetallics remain lowest" under
+  the All reference is false: chalcogenides (21.6%) fall below intermetallics (22.3%) and
+  oxides drop to third. Narrowed to the top-versus-intermetallic contrast.
+- Section 4.2 still carried the pre-round-4 reading (open-shell character is the operative
+  variable) that Section 4.3 now refutes, and misdescribed Ni's pattern. Rewritten.
+- The U-suppression claim was stated for the U list as a whole; it holds for Fe and Co.
+  Ni's largest excess is in oxides (+10.3), i.e. the opposite direction. Now stated as a
+  Fe/Co result with Ni named as the exception.
+- "The ordering is unchanged on either scale" was contradicted by the odds column: on
+  odds, intermetallics (8.38) overtake borides (7.88). Narrowed to the bottom two.
+- "Every cell on which GNoME is significantly worse contains oxygen, a 3d metal or a
+  halide" is false for two of eight (ternary pnictides and chalcogenides, the two
+  smallest deficits).
+- Two adjacent contradictory sentences in Section 4.6 ("The cells are not differently
+  positioned" immediately followed by "The cells do differ somewhat in position").
+- Copper was called "the decisive case" on an assumed Cu(2+) oxidation state in a dataset
+  that is >60% metallic, where most Cu is likely d10. Downgraded to suggestive.
+- Lanthanide-pooled cells in Tables 6 and 7 and Section 4.5 were never flagged as pooled,
+  making the headline contrast appear to shrink from 26.7 to 22.0 to 20.0 across sections.
+  Captions now state the pooling.
+- Nine places still said "open-shell d" after the label was changed to "MP U-list".
+- LR test df was 14; with five anion dummies it is 10.
+
+CITATION ERROR FOUND AND REMOVED
+- rare2026 (Tao, Ridwan, Ke, Zhu, arXiv:2608.25270) was cited for the claim that GGA
+  treatment of the Gd 4f7 shell renders the MP hull unreliable. Verified at source: that
+  paper does not mention Gd, the 4f shell, GGA, or MP hull reliability, and Gd is not
+  among the elements it studies. Claim and citation deleted. warford2026 verified at
+  source and its author initials completed. liu2024 verified as a non-peer-reviewed
+  commentary and now labelled as such at both points of use.
+
+REPRODUCIBILITY
+- scripts/check_paper.py: parses every number out of the LaTeX tables and diffs it
+  against results/. 232 values checked. It found a real transcription error on its first
+  run (MP completeness intermetallic n printed 7,953 against 7,954 in the data), which
+  also explained a 22,755-vs-22,756 total that had been papered over with a footnote
+  about an unclassifiable composition. Now wired into run_all.py and the CI workflow, so
+  table-vs-analysis agreement is machine-checked on every push rather than trusted.
+- Budget comparison gained paired per-split differences, which is the correct uncertainty
+  for policies evaluated on shared splits: hull beats composition by +2.24 pp (paired sd
+  1.09, 20/20 splits) and combined beats hull by +5.77 pp (paired sd 0.95, 20/20).
+
+# Phase 10: fourth external review — stale figures found — 2026-10-11
+
+A fourth reviewer (7/10) found what no automated check could: the figures compiled into
+the PDF were stale copies in the build directory, not the regenerated ones in results/.
+Three were wrong:
+- Fig 3 (band gap) predated the Section 4.8 rebinning: it showed a "metal (0)" bin with
+  n=79,081 that no longer exists in the analysis.
+- Fig 4 (logit) plotted naive intervals and raw variable names (has_U, is_bcs).
+- Fig 6 (budget) showed only two of the four policies and was labelled "wrong stability
+  labels caught", contradicting the paper's disagreement-not-error framing.
+All three regenerated from current results (scripts/figures5.py for 3 and 4,
+figures4.py for 6) and copied into the build. check_paper.py cannot catch this class of
+error because it reads tables, not images; a figure-provenance check would need the
+plotting scripts to stamp their inputs, which is left as future work.
+
+Also fixed from that review:
+- Tie-breaking in the budget evaluation was a stable sort on input order. Where the
+  budget cuts through a tied cell this biases the realised catch. Now a seeded random
+  permutation. Numbers shift slightly (composition 38.1 -> 37.6, combined 46.1 -> 45.8
+  at a 20% budget); all orderings and all 20/20 paired wins survive. Paired differences
+  are now hull-composition +2.75 (sd 1.43) and combined-hull +5.42 (sd 1.39).
+- Causal U language removed throughout: the comparison is across composition classes
+  that differ in more than whether U is applied, so the paper now says the smaller oxide
+  excesses are consistent with partial suppression, and explicitly declines the claim
+  that applying U causes the gradient to shrink.
+- "Upper and lower bounds" on the chemistry effect replaced with reference-set
+  sensitivity. Two observed reference choices do not bracket the effect; a more complete
+  hull raises individual decomposition energies but need not move class rates equally.
+  The 2.1-to-1.3 ratio range is now presented as a result rather than a caveat.
+- "Excess attributable to Fe" -> "associated with"; "same chemistry" -> "same broad
+  composition class".
+- Hull stratification no longer claims to "remove" proximity differences; binning leaves
+  residual variation and a continuous model is named as the stronger untried test.
+- The F-statistic and the LR chi-squared are now labelled as assuming independence and
+  read descriptively, consistent with the paper's own clustering correction.
+- The 20 matched MP cells are labelled exploratory with no multiplicity correction.
+- The budget is called an entry-count budget, not compute.
+- Section 4.13 said the aggregate inversion was "consistent with" the source's 84-vs-90
+  comparison. It is opposite in direction; now stated as such.
+- Section 4.12's "the expectation fails" clarified: the frozen-f concern is not borne
+  out, our registered expectation is.
+- Citation-use fixes: the introduction's blanket "every one of those verdicts is PBE" is
+  false (Alexandria uses PBEsol geometries and SCAN energies) and is now scoped to GNoME;
+  Kirklin's 0.081 qualified as the all-elements fit (0.096 distributed) and the 0.082
+  experiment-vs-experiment figure identified as 75 overlapping intermetallics rather than
+  a universal noise floor; PseudoDojo cited as the general statement with an explicit
+  note that GNoME's actual lanthanide PAW datasets are unknown to us; Zeni completed to
+  Nature 639, 624-632; Reents given author initials; the MP mixing documentation now
+  cites the specific page rather than the root domain.
+
+# Phase 11: fifth review — population accounting — 2026-10-11
+
+A fifth reviewer (major revision) returned ~120 recommendations. Triaged: about eleven
+were real defects, the rest largely hedging preferences, several already done. Fixed the
+eleven; declined most of the rephrasing, which applied wholesale would leave the paper
+making no claims at all.
+
+The important one: the band-gap population fix reported as done in Phase 9 HAD NOT
+LANDED. It was written, the edit batch aborted on an unrelated line, and the re-applied
+batch omitted it. The paper still said 26,995 materials carry an infinite recorded gap.
+phase22_populations.py now produces the mutually exclusive accounting, which the paper
+carries as a table: 22,498 unmatched / 2,320 empty field / 2,177 infinite sentinel /
+112 exactly zero / 112,434 finite positive = 139,541. Only the 2,177 are sentinels and
+none of the groups is evidence of insulating character. The 112 exact-zero figure is
+verified. Lesson: check_paper.py validates tables against data but nothing validates
+prose against data, and a reported-fixed item was wrong for two days as a result.
+
+Other real fixes:
+- Section 4.3's heading still read "The correction scheme suppresses the disagreement
+  where applied", contradicting the cautionary paragraph added in Phase 10, as did
+  "Everything below therefore isolates U", "the empirical correction is doing part of
+  what the meta-GGA does" and "neither surface is corrected". All replaced. Paper-wide
+  formulation is now: elevated disagreement persists outside the U-treated regime; the
+  smaller Fe/Co excesses in oxides are consistent with partial suppression but do not
+  identify a causal effect.
+- Section 5 said larger-celled materials flip less often; Section 4.10 says rates rise
+  from 11.3% to 16.3% with cell size. Contradiction removed and the per-feature
+  decomposition of the IPW direction withdrawn, since the model as fitted does not
+  support it.
+- Nickel's largest excess is chalcogenides (+14.2), not oxides (+10.3).
+- Censoring bounds were computed treating all 139,541 recomputed entries as observed
+  members of a release 22,498 of them do not match. Recomputed on the eligible
+  population: N=365,504 PBE-stable <=4-element release entries, n=116,789 recomputed,
+  F=15,608 flips, giving 4.3% to 72.3%.
+- "The four lowest" listed five elements; Figure 1's dashed line is the all-element rate
+  not the quaternary marginal; Kuner completed to npj Comput. Mater. 11, 209.
+- Added Table 1, a population-flow table, so every varying n in the paper traces to a
+  stated exclusion.
+- Abstract: "correcting throughout" made specific; 239 meV/atom identified as a fitted
+  coefficient per unit atomic fraction; "All" no longer called a more complete hull;
+  scope narrowed to the primary cell analysis; "unvalidated" replaced with "extremely
+  sparsely recomputed".
+- Introduction: the benchmark sentence no longer asserts what benchmarks assume, and a
+  paragraph now separates formation-energy accuracy from verdict disagreement.
+
+Declined: the wholesale replacement of every "X does not generate the effect" with
+"persists under the tested adjustment for X"; the full provenance list in the reviewer's
+6.2 beyond access dates and query parameters; deleting the F-statistic already labelled
+descriptive. The reviewer's own section 13 stopping rule is adopted: remaining work is
+the GNoME authors' email about the "All" column and an independent human check of the
+core scripts.
+
+# Phase 12: systematic consistency pass — 2026-10-11
+
+Sixth review (8/10, major revision). Its diagnosis was structural rather than a list:
+the body still carried conclusions the revised abstract had dropped. The cause is
+patch-based editing — passages reviewers flagged got fixed, passages nobody flagged were
+never touched. Section 1.2, the contributions list, had not been edited in sixteen
+drafts and still read "controlled tests", "is not produced by", "partially suppresses
+rather than creates it". It also still contained a grammatical break introduced by the
+previous patch round, which is evidence for the same point: patching had reached the
+rate where it introduced about as many defects as it removed.
+
+Response was one systematic pass rather than another patch batch: the abstract was taken
+as the authoritative statement of the paper's claims and the contributions list,
+discussion, limitations and conclusion were rewritten as a set to agree with it. The
+conclusion was rewritten entirely.
+
+Substantive changes beyond wording:
+- The element-versus-global bootstrap resampled the element rate alone against a fixed
+  global rate, although the comparator is estimated from the same data. Now resampled
+  jointly: one global cluster draw per replicate, both rates recomputed from it, standard
+  error taken from the difference. The BH count moves from 51 to 53 of 83. Appendix B
+  asterisks regenerated; run_all check updated.
+- Hull-coverage claims narrowed: entry count is a proxy and does not determine the
+  magnitude or ordering of the resulting bias, so the claims that oxide rates are "most
+  understated" and that completing the hull "would widen" the contrast are withdrawn.
+  What survives is that the 3d contrast persists within the tested coverage strata.
+- The winner's-curse exclusion is withdrawn. A common energy displacement need not
+  produce equal changes in flip probability across classes, so "a common shift cancels in
+  a difference" was wrong.
+- The flip outcome is now defined on two populations explicitly: confirmed
+  PBE-stable-to-r2SCAN-unstable for the 117,043 matched materials, and positive r2SCAN
+  decomposition energy for the 22,498 unmatched where PBE stability is inferred rather
+  than observed.
+- The IPW target population (371,870, all <=4-element entries) is distinguished from the
+  censoring-bound population (365,504, those also PBE-stable); they differ by 6,366.
+- McFadden pseudo-R2 no longer described as variance explained.
+- "A genuine open-shell 3d set" is now "an alternative 3d element-presence indicator",
+  and the conclusion drawn is that this indicator fits worse, not that open-shell
+  character is excluded as a mechanism.
+- New Appendix D, implementation details: resampling unit and replicate counts, joint
+  contrast resampling, regression indicator encoding including the Mo/W and Fe+Ti cases,
+  sandwich estimator with residuals and scores defined separately, propensity weighting
+  with its positivity problem stated, and the budget evaluation's eligible cluster count
+  (7,822), filter-before-split order, generated-regressor caveat and analytic
+  uniform-random row.
+
+Both checkers green: 23 headline quantities, 232 table values.

@@ -1,0 +1,156 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{booktabs,longtable,hyperref,amsmath}
+\usepackage[T1]{fontenc}
+\hypersetup{colorlinks=true,linkcolor=blue,urlcolor=blue}
+\title{\textbf{Response to the review of Draft 23}}
+\author{}
+\date{11 October 2026}
+\begin{document}
+\maketitle
+\vspace{-3em}
+
+Five items. Three applied, one applied in a different form than proposed because the
+proposed form rests on a claim the manuscript got wrong, one not applicable to me.
+All three checkers green afterwards: 63 headline quantities, 301 printed values,
+25 superseded literals.
+
+\section*{1. Hull-distance matching --- applied as a correction, not as the computation}
+
+The computation was not run. The reason is that the manuscript's own account of what it
+would take was wrong, and that is the part worth fixing first.
+
+Draft 23 said the sub-hull margin ``is recoverable by removing each entry from its own
+phase diagram and recomputing the hull \ldots\ That is a few hours of computation on
+entries we already hold.'' We do not hold those entries. The cached Materials Project pull
+is four columns --- \texttt{material\_id}, \texttt{energy\_above\_hull},
+\texttt{nelements}, \texttt{chemsys} --- for 152{,}427 GGA entries and 37{,}124 r$^2$SCAN
+entries. Reconstructing a phase diagram needs the competing entries of each chemical
+system, which is a different and much larger retrieval. The ``few hours'' figure was an
+estimate of a cost I had not measured, for an operation on data I did not have.
+
+I also could not run the retrieval from here: \texttt{api.materialsproject.org} is
+unreachable from both environments available to this session (403 at the proxy from the
+Linux VM, connection refused from the container), and neither has \texttt{mp-api} or
+\texttt{pymatgen} installed. The pull has to happen on the machine that ran the original
+queries.
+
+So the passage has been rewritten to say what is true and nothing more: the comparison is
+not matched on hull depth; the quantity exists on the GNoME side and not on the Materials
+Project side as retrieved, because \texttt{energy\_above\_hull} is floored at zero for
+stable entries; recovering it requires the competing entries of each system; it was not
+done; and no cost estimate is offered. The ``first thing we would add'' sentence is gone,
+which removes the visibly-unfinished reading.
+
+The downgrade asked for is also in, as a single new limitation paragraph --- distance below
+the hull predicts disagreement within GNoME, the two sets are not matched on it, this is
+the largest unaddressed confound in that comparison, and it is why the comparison is
+exploratory. Stated once in \S4.13 and once, briefly, in Limitations.
+
+\section*{2. ``All'' reference headline cells --- computed}
+
+This was the right request and it was cheap, because the ``All'' column is in the released
+file. New \texttt{scripts/phase40\_allref\_cells.py} recomputes the two cells the abstract
+quotes, with one prototype draw per replicate shared across both cells so that the spread
+and ratio intervals account for prototypes appearing in both. 20{,}000 replicates. It
+reproduces the global ``All'' rate of 25.8\% as a sanity check.
+
+\begin{center}
+\begin{tabular}{lrrr}
+\toprule
+ & $n$ & MP reference & ``All'' reference \\
+\midrule
+oxide, no Ln, 3$d$ (4-el)        & 2{,}478 & 30.7\% & 37.4\% [34.6, 40.4] \\
+intermetallic, no Ln/3$d$ (4-el) & 5{,}025 & 4.0\%  & 14.5\% [12.9, 16.1] \\
+\midrule
+spread (pp)                      &         & $+26.7$ [$+23.5$, $+29.9$] & $+22.9$ [$+19.7$, $+26.3$] \\
+ratio                            &         & 7.67 [6.29, 9.52] & 2.58 [2.26, 2.97] \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\textbf{The headline survives.} Both rates rise, the ratio compresses from 7.67-fold to
+2.58-fold, but the absolute spread falls only from $+26.7$ to $+22.9$ points and its
+interval [$+19.7$, $+26.3$] is nowhere near zero.
+
+Worth noting against the review's framing: the cell-level compression (7.67 to 2.58) is
+much milder than the anion-class compression of Table~13 (2.1 to 1.3). The class figures
+pool over element count and over lanthanide and 3$d$ content, and the intermetallic class
+as a whole gains more from the more inclusive reference set than its lanthanide- and
+3$d$-free quaternary subset does. So the class-level number overstates how much the
+headline moves. That is now said in the text.
+
+One thing the new table deliberately does not do is print a second interval for the
+MP-reference cells. The shared-draw design gives $[27.6, 33.8]$ for the oxide cell against
+the canonical per-cell $[27.7, 33.8]$, and \texttt{check\_stale.py} refused the build
+because 27.6 is a pinned superseded value from the pre-convergence 600-replicate runs. It
+was right to refuse: two intervals for the same quantity differing in the last digit carry
+no information and invite exactly that confusion. The MP column is point estimates only,
+with the caption saying why.
+
+\section*{3. Ni intermetallic interval --- fixed, and the inference about the checker was right}
+
+Confirmed and corrected. The row for Ni in intermetallics in
+\texttt{within\_anion\_excess\_ci.csv} reads $n=4979$, excess $2.0$, interval $0.3$ to
+$3.7$: the table was right, the prose was wrong, and it now reads $+2.0$ [$+0.3$, $+3.7$].
+
+The second half of the observation was the more useful one. \texttt{check\_paper.py}
+filtered that file to iron rows only, so no nickel or cobalt
+endpoint was ever compared, and the value was in prose, which the table parser cannot see
+and which \texttt{check\_stale.py} only covers for values already known to be superseded.
+Three things changed:
+
+\begin{itemize}
+\item \texttt{check\_paper.py} now carries a \texttt{PROSE\_INTERVALS} list: each interval
+quoted outside a table is matched by regex and diffed against the CSV. The Ni sentence is
+the first entry. Verified by regression --- restoring 3.8 produces a reported mismatch
+(\mbox{paper 3.8}, \mbox{results 3.7}) and exit status 1.
+\item \texttt{check\_stale.py} pins the wrong interval string at zero permitted
+occurrences.
+\item The new two-reference table is parsed too, so its 12 values cannot go stale.
+\end{itemize}
+
+Printed-value coverage went from 278 to 301. \texttt{VALIDATION.md} now states plainly
+that prose intervals are enumerated rather than found automatically, and that a new one
+needs a line added.
+
+I had also told the author that \texttt{check\_paper.py} covered ``the endpoints of every
+interval in the within-anion excess table.'' It covered Fe's. That overclaim is corrected
+in \texttt{VALIDATION.md}.
+
+\section*{4. External review --- not mine to apply}
+
+Correct and unchanged. The manuscript says the core definitions and scripts have not been
+reviewed by anyone other than the author, and that stays true until someone reviews them.
+\texttt{REVIEWER.md} already orders the eight areas to inspect, and the seven items listed
+in the review map onto B1--B7 of it, so the ask can be forwarded as-is.
+
+\section*{5. Residual process narration --- applied}
+
+Removed from the manuscript and left in the repository:
+
+\begin{itemize}
+\item the reference-run taxonomy with its counts and the ``expected to be updated whenever
+a number legitimately changes'' explanation;
+\item the per-layer description of what each checker parses;
+\item ``cheaper than the old implementation's 400,'' now stated as a property of the
+aggregation rather than as a comparison against a previous version;
+\item ``retains the \ldots\ superseded independence-based intervals,'' now stated as what
+\texttt{phase28} carries and what \S4.13 quotes it for;
+\item ``records the defects found in preparing this work as calibration.''
+\end{itemize}
+
+What is kept is one short paragraph: the driver regenerates and checks, CI runs it on a
+clean runner after deleting the stored results, \texttt{VALIDATION.md} has the detail, and
+reproducing a number is not the same as the number being right. That last sentence is a
+warning about how to read the paper, not software maintenance, so it belongs in the paper.
+
+\section*{Not applied}
+
+Nothing was rejected outright. The only departure from the review is item 1, where the
+computation was replaced by a correction of the manuscript's claim about the computation,
+for the reasons given. If the hull-depth retrieval is run later, the matched comparison
+should be redone on continuous depth rather than on bands, and the result will either
+strengthen \S4.13 or weaken it --- the section is already labelled exploratory either way.
+
+\end{document}

@@ -1,0 +1,20 @@
+phase,seconds,ok
+phase31_stability,292.0,True
+phase31b_fe_stability,3.6,True
+phase32_bh_identity,58.1,True
+phase33_percentile_conv,113.0,True
+phase34_converged_intervals,37.7,True
+phase35_coarse_cluster,5.5,True
+phase26_diag,16.3,True
+phase27_ame_ci,180.5,True
+phase28_standardise,6.2,True
+phase30_matched_basis,15.1,True
+phase37_matched_cluster,8.4,True
+phase38_resampling_equivalence,4.5,True
+phase40_allref_cells,23.4,True
+phase41_hull_continuous,4.7,True
+phase43_context_identify,112.3,True
+make_figures,2.6,True
+TOTAL,883.9,
+# platform,Linux-6.18.44-fc-v140-x86_64-with-glibc2.39,
+# python,3.13.16,

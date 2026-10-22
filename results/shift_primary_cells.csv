@@ -1,0 +1,13 @@
+anion,d3,n,mean,median,sd,q1,q3,share_up
+oxide,True,2085,14.7,5.4,55.7,-8.3,28.6,61.1
+oxide,False,2748,6.8,3.1,49.5,-11.1,22.2,57.1
+pnictide,True,5145,4.5,0.7,39.1,-10.7,17.5,51.5
+pnictide,False,4043,-6.2,-2.7,31.2,-14.1,5.9,40.8
+intermetallic,True,7023,-0.1,-1.5,28.7,-10.1,7.4,44.5
+intermetallic,False,4628,-8.9,-4.1,23.8,-14.2,1.5,31.0
+boride/carbide/silicide,True,4167,12.9,6.4,35.6,-5.9,26.8,60.6
+boride/carbide/silicide,False,3120,-3.8,-1.9,31.4,-13.7,11.6,44.0
+halide,True,658,3.4,-0.8,36.0,-14.1,15.9,49.1
+halide,False,1126,-3.8,-4.8,29.8,-16.2,6.6,38.2
+chalcogenide,True,1272,8.1,2.6,37.9,-6.6,14.5,56.8
+chalcogenide,False,1234,-4.6,-2.7,27.7,-14.2,5.5,39.5

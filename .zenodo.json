@@ -1,0 +1,23 @@
+{
+  "title": "Chemistry-resolved disagreement between PBE and r2SCAN stability verdicts in the GNoME materials database: analysis code and derived results",
+  "upload_type": "software",
+  "license": "mit",
+  "creators": [
+    {
+      "name": "Karthikeya",
+      "affiliation": "Accretion Labs"
+    }
+  ],
+  "keywords": [
+    "density functional theory",
+    "r2SCAN",
+    "meta-GGA",
+    "thermodynamic stability",
+    "convex hull",
+    "materials discovery",
+    "GNoME",
+    "reproducibility"
+  ],
+  "description": "<p>Analysis code, pre-registered decision rules and derived results for a chemistry-resolved audit of disagreement between PBE(+U) and r2SCAN stability verdicts on the 139,541 GNoME materials released with r2SCAN recalculations.</p><p>The repository reproduces from two public CSV files; two phases additionally require a free Materials Project API key, and their outputs are cached and labelled as stored where reused. A driver checks 54 headline quantities against the values printed in the paper and a second layer diffs 242 printed table values against the result files. See REPRODUCE.md for the recipe and REVIEWER.md for the separate question of whether the analysis is correct.</p>",
+  "access_right": "open"
+}

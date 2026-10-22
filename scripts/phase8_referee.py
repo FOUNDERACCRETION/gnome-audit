@@ -32,24 +32,49 @@ pbar=r.flip.mean()
 # ---- 1. per-element with cluster-robust CI + BH correction
 from math import erfc, sqrt
 def z_to_p(z): return erfc(abs(z)/sqrt(2))   # two-sided
-rows=[]
+# The comparator is the global rate, which is estimated from the same data, so the
+# contrast must be resampled JOINTLY: one global draw of prototype clusters per replicate,
+# from which both the element rate and the global rate are recomputed. Resampling the
+# element rate alone and treating the global rate as fixed understates the variance of
+# the difference for small elements and overstates it for the largest.
+NB=300
+protos=[g for _,g in r.groupby("proto").indices.items()]
+idx_by_proto=[np.asarray(v) for v in r.groupby("proto").indices.values()]
+Kall=len(idx_by_proto)
+flip_all=r.flip.values
+elem_mask={}
 for el in sorted({x for e in els for x in e}):
     m=els.map(lambda e: el in e).values
-    if m.sum()<300: continue
+    if m.sum()>=300: elem_mask[el]=m
+boot_glob=np.empty(NB)
+boot_el={el:np.empty(NB) for el in elem_mask}
+for b in range(NB):
+    pick=RNG.integers(0,Kall,Kall)
+    rows_idx=np.concatenate([idx_by_proto[i] for i in pick])
+    boot_glob[b]=flip_all[rows_idx].mean()
+    for el,m in elem_mask.items():
+        sel=rows_idx[m[rows_idx]]
+        boot_el[el][b]=flip_all[sel].mean() if len(sel) else np.nan
+rows=[]
+for el,m in elem_mask.items():
     sub=r[m]
-    grp=[g.flip.values for _,g in sub.groupby("proto")]; K=len(grp)
-    bs=np.empty(300)
-    for b in range(300):
-        idx=RNG.integers(0,K,K); bs[b]=np.concatenate([grp[i] for i in idx]).mean()
-    p=float(sub.flip.mean()); se=float(bs.std(ddof=1))
-    rows.append(dict(element=el,n=int(m.sum()),n_proto=K,flip=p,
-        clust_lo=float(np.percentile(bs,2.5)),clust_hi=float(np.percentile(bs,97.5)),
+    p=float(sub.flip.mean())
+    d=boot_el[el]-boot_glob            # the contrast, resampled jointly
+    d=d[~np.isnan(d)]
+    se=float(d.std(ddof=1))
+    rows.append(dict(element=el,n=int(m.sum()),
+        n_proto=int(sub.proto.nunique()),flip=p,
+        clust_lo=float(np.nanpercentile(boot_el[el],2.5)),
+        clust_hi=float(np.nanpercentile(boot_el[el],97.5)),
         se=se,z=(p-pbar)/se if se>0 else 0.0))
 pe=pd.DataFrame(rows)
 pe["p_raw"]=pe.z.map(z_to_p)
 pe=pe.sort_values("p_raw").reset_index(drop=True)
 mtests=len(pe)
-pe["p_BH"]=(pe.p_raw*mtests/(pe.index+1)).cummin().clip(upper=1.0)
+# BH step-up: the monotonicity enforcement runs from the LARGEST p downward.
+# Taking cummin forward over an ascending sort propagates the smallest adjusted
+# p to every later element and marks everything significant.
+pe["p_BH"]=(pe.p_raw*mtests/(pe.index+1))[::-1].cummin()[::-1].clip(upper=1.0)
 pe["sig_BH_05"]=pe.p_BH<0.05
 pe=pe.sort_values("flip",ascending=False)
 pe.to_csv("results/per_element_clustered.csv",index=False)

@@ -1,0 +1,11 @@
+quantity,value
+r2scan_rows,139541
+matched,117043
+matched_pbe_stable,117018
+matched_not_pbe_stable,25
+of_those_in_primary_cells,24
+primary_cell_n,135044
+primary_cell_n_excl_25,135020
+budget_cluster_pool,7822
+budget_clusters_per_split,3911
+all_clusters,8429

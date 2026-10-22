@@ -1,0 +1,8 @@
+subset,metal,n_with,flip_with,flip_without,excess_pp
+F-containing,Fe,78,33.3,24.6,8.8
+F-containing,Mn,170,27.1,24.7,2.4
+F-containing,any U-list,670,29.4,23.1,6.3
+Cl/Br/I only,Fe,398,22.6,6.3,16.3
+Cl/Br/I only,Co,523,10.7,6.9,3.8
+Cl/Br/I only,Mn,149,28.2,6.7,21.5
+Cl/Br/I only,any U-list,1513,13.4,5.6,7.8

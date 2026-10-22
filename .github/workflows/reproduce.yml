@@ -27,11 +27,14 @@ jobs:
           # phases, which this runner skips for lack of an API key. They are kept so the
           # figures can build; run_all.py labels any check that reads them as stored
           # rather than regenerated. Everything else must be rebuilt from the raw CSVs.
-          find results -type f \( -name '*.csv' -o -name '*.png' -o -name '*.json' \) \
-               ! -name 'known_baseline.csv' ! -name 'mp_completeness.csv' -delete
+          find results -type f \( -name '*.csv' -o -name '*.png' -o -name '*.json' -o -name '*.npy' -o -name '*.tex' \) \
+               ! -name 'known_baseline.csv' ! -name 'mp_completeness.csv' \
+               ! -name 'mp_gga_raw.csv' ! -name 'mp_r2scan_raw.csv' -delete
           ls -la results
       - name: Regenerate results and check against the paper
         run: python run_all.py --skip q2_known_baseline,q2b_completeness
+      - name: Check every printed table value against the regenerated results
+        run: python scripts/check_paper.py paper/gnome_audit_paper.tex
       - uses: actions/upload-artifact@v4
         if: always()
         with:
